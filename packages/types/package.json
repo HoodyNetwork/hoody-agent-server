@@ -1,4 +1,5 @@
 {
+	"_description": "Shared TypeScript types package - Core type definitions used across the entire monorepo",
 	"name": "@roo-code/types",
 	"version": "0.0.0",
 	"type": "module",
