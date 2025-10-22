@@ -72,7 +72,7 @@ A fast, standalone, asynchronous AI agent that provides all the capabilities of 
 
 ### Prerequisites
 
-- **Node.js 20.x - 22.x** (required - Node 23+ not yet supported)
+- **Node.js 20.x - 22.x** (required - Node 23+ untested but might work)
 - **pnpm** (package manager - **REQUIRED**, npm will not work as this is a pnpm workspace monorepo)
 - Git
 
