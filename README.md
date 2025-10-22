@@ -1,4 +1,4 @@
-# <img src="./assets/icons/ai-agent-dark-64px.png" alt="" width="32" height="32" /> Hoody Agent Server
+# <img src="./assets/icons/ai-agent-dark-64px.webp" alt="" width="32" height="32" /> Hoody Agent Server
 
 > **Build Your Own AI Coding Assistant in Minutes** - Just Send JSON
 
@@ -44,7 +44,7 @@ A fast, standalone, asynchronous AI agent that provides all the capabilities of 
 **The Solution:** Hoody Agent Server bundles a **complete VS Code extension environment** that runs headlessly in Node.js, exposing everything through HTTP/WebSocket APIs. **Control powerful AI agents by simply sending JSON** - no SDKs, no complex integrations. You focus on building great UIs and workflows - Hoody Agent Server handle the complexity: you do not need to run VSCode to interact with it, you either need to build an UI for it, or use it programmatically.
 
 <p align="center">
-  <img src="./assets/readme/comparison-diagram.png" alt="Traditional vs Hoody Approach" width="100%" />
+  <img src="./assets/readme/comparison-diagram.webp" alt="Traditional vs Hoody Approach" width="100%" />
 </p>
 
 <p align="center">
