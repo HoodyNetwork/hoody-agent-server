@@ -1,3 +1,9 @@
+<!--
+  WebSocket Messages Reference
+  Complete documentation of real-time bidirectional communication protocol
+  Includes all message types for Extension→Client and Client→Extension flows
+-->
+
 # WebSocket Messages Reference
 
 This document provides a complete reference for all WebSocket messages used in Hoody Agent Server. WebSocket connections enable real-time, bidirectional communication between clients and the server.
