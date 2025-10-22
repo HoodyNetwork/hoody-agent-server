@@ -1,3 +1,7 @@
+# Git Ignore Configuration
+# This file specifies intentionally untracked files that Git should ignore.
+# Keeps build artifacts, dependencies, and sensitive files out of version control.
+
 .pnpm-store
 dist
 out
