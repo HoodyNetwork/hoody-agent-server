@@ -36,8 +36,8 @@ docs/_site/
 .env.*
 !.env.*.sample
 
-# Logging
-logs
+# Logging - exclude log output directories but not source code
+/logs
 *.log
 
 # Vite development
