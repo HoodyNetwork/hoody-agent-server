@@ -1,0 +1,1 @@
+export const HOODYCODE_POSTHOG_API_KEY = process.env.HOODYCODE_POSTHOG_API_KEY || ""

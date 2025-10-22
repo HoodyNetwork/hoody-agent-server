@@ -1,0 +1,95 @@
+{
+  "entryFile": "services/api-server/index.ts",
+  "noImplicitAdditionalProperties": "silently-remove-extras",
+  "controllerPathGlobs": [
+    "services/api-server/controllers/**/*Controller.ts"
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "*": ["*"]
+    }
+  },
+  "spec": {
+    "outputDirectory": "services/api-server/generated",
+    "specVersion": 3,
+    "yaml": true,
+    "basePath": "/api/v1/agent",
+    "securityDefinitions": {
+      "bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "name": "Hoody Code API",
+    "version": "1.0.0",
+    "description": "REST API for Hoody Code VSCode Extension - Remote control and integration interface",
+    "license": "Apache-2.0",
+    "contact": {
+      "name": "Hoody Code",
+      "url": "https://hoody.com"
+    },
+    "tags": [
+      {
+        "name": "Health",
+        "description": "Server health and status endpoints"
+      },
+      {
+        "name": "State",
+        "description": "Application state and configuration"
+      },
+      {
+        "name": "Profiles",
+        "description": "AI provider profile management"
+      },
+      {
+        "name": "Modes",
+        "description": "Mode management and configuration"
+      },
+      {
+        "name": "Tasks",
+        "description": "Task creation and lifecycle management"
+      },
+      {
+        "name": "Files",
+        "description": "File operations and workspace access"
+      },
+      {
+        "name": "MCP",
+        "description": "Model Context Protocol server integration"
+      },
+      {
+        "name": "Terminal",
+        "description": "Terminal command execution"
+      },
+      {
+        "name": "CodeIndex",
+        "description": "Code search and semantic indexing"
+      },
+      {
+        "name": "Settings",
+        "description": "Extension settings management"
+      },
+      {
+        "name": "Commands",
+        "description": "Slash command templates"
+      },
+      {
+        "name": "Prompts",
+        "description": "Support prompt templates"
+      }
+    ]
+  },
+  "routes": {
+    "routesDir": "services/api-server/generated",
+    "basePath": "/agent",
+    "middleware": "express",
+    "authenticationModule": "./services/api-server/auth-middleware.ts"
+  },
+  "ignore": [
+    "**/*spec.ts",
+    "**/*test.ts",
+    "**/node_modules/**"
+  ]
+}

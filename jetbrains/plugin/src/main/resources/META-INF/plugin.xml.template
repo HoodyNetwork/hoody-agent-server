@@ -1,0 +1,118 @@
+<!--
+SPDX-FileCopyrightText: 2025 Weibo, Inc.
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
+    <id>ai.hoodycode.jetbrains</id>
+
+    <!-- Public plugin name should be written in Title Case.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
+    <name>Hoody Code</name>
+
+    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
+    <vendor url="https://hoody.com">Hoody Code</vendor>
+
+    <!-- Resource bundles for internationalization -->
+    <resource-bundle>messages.JetbrainsBundle</resource-bundle>
+    <resource-bundle>messages.HoodycodeBundle</resource-bundle>
+
+    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
+         Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
+    <description><![CDATA[
+        <h1>Hoody Code AI Agent</h1>
+        <p>Open Source AI coding assistant for planning, building, and fixing code.</p>
+   ]]></description>
+   
+   <!-- Change notes for the plugin -->
+   <change-notes><![CDATA[
+{{CHANGE_NOTES}}
+    ]]></change-notes>
+
+    <!-- Product and plugin compatibility requirements.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>org.jetbrains.plugins.terminal</depends>
+    
+    <!-- Extension points defined by the plugin.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
+    <extensions defaultExtensionNs="com.intellij">
+        <projectService serviceImplementation="ai.hoodycode.jetbrains.plugin.WecoderPluginService"/>
+        <jbProtocolCommand implementation="ai.hoodycode.jetbrains.commands.HoodyCodeAuthProtocolCommand" />
+        <postStartupActivity implementation="ai.hoodycode.jetbrains.plugin.WecoderPlugin"/>
+        <editorFactoryListener implementation="ai.hoodycode.jetbrains.editor.EditorListener"/>
+        <toolWindow factoryClass="ai.hoodycode.jetbrains.ui.RooToolWindowFactory"
+                    id="Hoody Code"
+                    secondary="true"
+                    icon="/icons/hoody-dark.svg"
+                    anchor="right" />
+        <notificationGroup
+                    id="hoodycode"
+                    displayType="BALLOON"
+        />
+    </extensions>
+
+    <extensions defaultExtensionNs="org.jetbrains.plugins.terminal">
+        <localTerminalCustomizer implementation="ai.hoodycode.jetbrains.terminal.WeCoderTerminalCustomizer"/>
+    </extensions>
+
+    <actions>
+        <action id="hoodycode.plusButtonClicked"
+                icon="AllIcons.General.Add"
+                class="ai.hoodycode.jetbrains.actions.PlusButtonClickAction"
+                text="New Task"
+                description="New task">
+            <override-text place="GoToAction" text="New Task" />
+        </action>
+
+        <action id="hoodycode.mcpButtonClicked"
+                icon="AllIcons.Webreferences.Server"
+                class="ai.hoodycode.jetbrains.actions.MCPButtonClickAction"
+                text="MCP Server"
+                description="MCP server">
+            <override-text place="GoToAction" text="MCP Server" />
+        </action>
+
+        <action id="hoodycode.historyButtonClicked"
+                icon="AllIcons.Vcs.History"
+                class="ai.hoodycode.jetbrains.actions.HistoryButtonClickAction"
+                text="History"
+                description="History">
+            <override-text place="GoToAction" text="History" />
+        </action>
+
+        <action id="hoodycode.profileButtonClicked"
+                icon="AllIcons.General.User"
+                class="ai.hoodycode.jetbrains.actions.ProfileButtonClickAction"
+                text="Profile"
+                description="Profile">
+            <override-text place="GoToAction" text="Profile" />
+        </action>
+
+        <action id="hoodycode.settingsButtonClicked"
+                icon="AllIcons.General.Settings"
+                class="ai.hoodycode.jetbrains.actions.SettingsButtonClickAction"
+                text="Settings"
+                description="Setting">
+            <override-text place="GoToAction" text="Setting" />
+        </action>
+
+        <group id="WecoderToolbarGroup">
+            <reference ref="hoodycode.plusButtonClicked" />
+            <reference ref="hoodycode.mcpButtonClicked" />
+            <reference ref="hoodycode.historyButtonClicked" />
+            <reference ref="hoodycode.profileButtonClicked" />
+            <reference ref="hoodycode.settingsButtonClicked" />
+        </group>
+
+        <group id="hoodycode.RightClickMenu" text="Hoody Code" description="hoodycode main menu"  icon="/icons/hoody-dark-small.svg" popup="true">
+            <group id="hoodycode.RightClick.Chat" class="ai.hoodycode.jetbrains.actions.RightClickChatActionGroup"
+                   text="Chat" description="hoodycode chat tool"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        </group>
+    </actions>
+</idea-plugin>

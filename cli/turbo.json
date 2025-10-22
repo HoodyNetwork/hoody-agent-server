@@ -1,0 +1,41 @@
+{
+	"$schema": "https://turbo.build/schema.json",
+	"extends": ["//"],
+	"tasks": {
+		"clean": {
+			"cache": false,
+			"outputs": []
+		},
+		"clean:hoodycode": {
+			"outputs": ["dist/hoodycode/**"],
+			"inputs": ["../../bin-unpacked/extension/**"]
+		},
+		"copy:hoodycode": {
+			"outputs": ["dist/hoodycode/**"],
+			"inputs": ["../../bin-unpacked/extension/**"],
+			"dependsOn": ["clean:hoodycode", "hoody-code#vsix:unpacked"]
+		},
+		"build": {
+			"cache": false,
+			"outputs": ["dist/**"],
+			"inputs": ["src/**"],
+			"dependsOn": ["clean", "copy:hoodycode"]
+		},
+		"start": {
+			"cache": false,
+			"dependsOn": ["build"]
+		},
+		"cli:bundle": {
+			"cache": false,
+			"outputs": ["dist/**"],
+			"inputs": ["src/**", "package.dist.json", "esbuild.config.mjs"],
+			"dependsOn": ["build", "deps:install"]
+		},
+		"deps:install": {
+			"cache": false,
+			"outputs": ["dist/node_modules/**"],
+			"inputs": ["package.dist.json"],
+			"dependsOn": ["build"]
+		}
+	}
+}

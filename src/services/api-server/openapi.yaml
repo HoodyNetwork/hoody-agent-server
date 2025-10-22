@@ -1,0 +1,2137 @@
+openapi: 3.1.0
+info:
+  title: Hoody Code API
+  description: |
+    Complete REST API for Hoody Code - enabling remote UI development, automation, and custom integrations.
+    
+    ## Features
+    - **50 REST endpoints** across 9 categories
+    - **Real-time WebSocket** with 270+ message types
+    - **Token-based authentication** (Bearer + query param)
+    - **Comprehensive error handling** with proper HTTP status codes
+    - **Full CRUD operations** for tasks, files, commands, and more
+    
+    ## Getting Started
+    1. Get your API token from VSCode settings or the startup notification
+    2. Include it in all requests: `Authorization: Bearer YOUR_TOKEN`
+    3. Start with `/health` to verify connectivity
+    4. See Quick Start guide for examples: `docs/API_QUICKSTART.md`
+    
+    ## WebSocket Connection
+    ```javascript
+    const ws = new WebSocket('ws://localhost:3000/ws?token=YOUR_TOKEN')
+    ```
+    
+  version: 1.0.0
+  contact:
+    name: Hoody Code Support
+    url: https://hoody.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local development server
+  - url: https://your-hoody-url/api/v1
+    description: Hoody deployment
+
+tags:
+  - name: Health
+    description: Server health and status monitoring
+  - name: State
+    description: Application state and configuration management
+  - name: Profiles
+    description: AI provider profile management (models, API keys, etc.)
+  - name: Tasks
+    description: Task management and lifecycle operations
+  - name: Files
+    description: File operations and code search
+  - name: MCP
+    description: Model Context Protocol server integration
+  - name: Terminal
+    description: Terminal command execution and management
+  - name: CodeIndex
+    description: Semantic code search and indexing
+  - name: Settings
+    description: Configuration and settings management
+  - name: Commands
+    description: Slash command library management
+
+security:
+  - BearerAuth: []
+
+paths:
+  /health:
+    get:
+      tags: [Health]
+      summary: Health check
+      description: Check server health status. No authentication required.
+      operationId: getHealth
+      security: [] # Override global security - no auth required
+      responses:
+        '200':
+          description: Server is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+  /state:
+    get:
+      tags: [State]
+      summary: Get application state
+      description: Get current application state snapshot including active task, settings, etc.
+      operationId: getState
+      responses:
+        '200':
+          description: Current state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StateResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /modes:
+    get:
+      tags: [State]
+      summary: List available modes
+      description: Get all available modes (built-in, organization, project, and global)
+      operationId: getModes
+      responses:
+        '200':
+          description: List of modes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  modes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        slug:
+                          type: string
+                        name:
+                          type: string
+                        description:
+                          type: string
+                        source:
+                          type: string
+                          enum: [built-in, organization, project, global]
+
+  /profiles:
+    get:
+      tags: [Profiles]
+      summary: List all profiles
+      description: Get all configured provider profiles with metadata (API keys redacted)
+      operationId: listProfiles
+      responses:
+        '200':
+          description: List of profiles
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  profiles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProfileListItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      tags: [Profiles]
+      summary: Create new profile
+      description: |
+        Create a new AI provider profile with specified configuration.
+        
+        **What it does:**
+        - Creates a new profile with unique ID
+        - Validates configuration for the specified provider
+        - Returns the new profile ID for future reference
+      operationId: createProfile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, config]
+              properties:
+                name:
+                  type: string
+                  description: Unique profile name
+                  minLength: 1
+                config:
+                  type: object
+                  description: Provider-specific configuration
+                  properties:
+                    apiProvider:
+                      type: string
+                      enum: [anthropic, openai, openrouter, bedrock, vertex, openai-native, ollama, lmstudio, gemini, mistral, cerebras, openai-compatible, roo]
+                    apiModelId:
+                      type: string
+                    temperature:
+                      type: number
+                      minimum: 0
+                      maximum: 2
+      responses:
+        '201':
+          description: Profile created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success, id, name]
+                properties:
+                  success:
+                    type: boolean
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /profiles/{nameOrId}:
+    get:
+      tags: [Profiles]
+      summary: Get specific profile
+      description: Get detailed configuration of a specific profile by name or ID (secrets redacted)
+      operationId: getProfile
+      parameters:
+        - name: nameOrId
+          in: path
+          required: true
+          description: Profile name or ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Profile details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /profiles/{name}:
+    put:
+      tags: [Profiles]
+      summary: Update profile
+      description: Update an existing profile's configuration
+      operationId: updateProfile
+      parameters:
+        - name: name
+          in: path
+          required: true
+          description: Profile name
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [config]
+              properties:
+                config:
+                  type: object
+                  description: Updated provider configuration
+      responses:
+        '200':
+          description: Profile updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  message:
+                    type: string
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Profiles]
+      summary: Delete profile
+      description: |
+        Delete a profile. Cannot delete the last remaining profile.
+      operationId: deleteProfile
+      parameters:
+        - name: name
+          in: path
+          required: true
+          description: Profile name
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Profile deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '400':
+          description: Cannot delete last profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /profiles/{nameOrId}/activate:
+    post:
+      tags: [Profiles]
+      summary: Activate profile
+      description: |
+        Make a profile the currently active one.
+        
+        **What it does:**
+        - Sets the profile as the default for new tasks
+        - Updates the current API configuration
+      operationId: activateProfile
+      parameters:
+        - name: nameOrId
+          in: path
+          required: true
+          description: Profile name or ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Profile activated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  profile:
+                    $ref: '#/components/schemas/Profile'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /profiles/modes/{mode}:
+    get:
+      tags: [Profiles]
+      summary: Get mode's profile
+      description: Get which profile is assigned to a specific mode
+      operationId: getModeProfile
+      parameters:
+        - name: mode
+          in: path
+          required: true
+          description: Mode slug (e.g., code, architect, debug)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Mode's profile assignment
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mode:
+                    type: string
+                  profileId:
+                    type: string
+                  profileName:
+                    type: string
+                  profile:
+                    $ref: '#/components/schemas/Profile'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags: [Profiles]
+      summary: Assign profile to mode
+      description: |
+        Configure which profile a specific mode should use.
+        
+        **What it does:**
+        - Links a profile to a mode
+        - When tasks run in this mode, they'll use this profile's AI model
+        - Allows different models for different modes (e.g., GPT-4 for architect, Claude for code)
+      operationId: setModeProfile
+      parameters:
+        - name: mode
+          in: path
+          required: true
+          description: Mode slug
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                profileId:
+                  type: string
+                  description: Profile ID to assign
+                profileName:
+                  type: string
+                  description: Profile name to assign (alternative to profileId)
+              oneOf:
+                - required: [profileId]
+                - required: [profileName]
+      responses:
+        '200':
+          description: Profile assigned to mode
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  mode:
+                    type: string
+                  profileId:
+                    type: string
+                  message:
+                    type: string
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+
+  /tasks:
+    get:
+      tags: [Tasks]
+      summary: List tasks
+      description: List all tasks with pagination, filtering, and sorting support
+      operationId: listTasks
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+            minimum: 1
+            maximum: 500
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+        - name: mode
+          in: query
+          description: Filter by mode (code, architect, debug, ask, orchestrator)
+          schema:
+            type: string
+        - name: favorite
+          in: query
+          schema:
+            type: boolean
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            enum: [createdAt, updatedAt, mode]
+            default: createdAt
+        - name: sortOrder
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+      responses:
+        '200':
+          description: List of tasks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      tags: [Tasks]
+      summary: Create task
+      description: Create a new task with specified message and mode
+      operationId: createTask
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskRequest'
+      responses:
+        '201':
+          description: Task created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskCreatedResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /tasks/{taskId}:
+    get:
+      tags: [Tasks]
+      summary: Get task details
+      description: Get full details of a specific task including history and state
+      operationId: getTask
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      responses:
+        '200':
+          description: Task details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Tasks]
+      summary: Delete task
+      description: Delete a specific task
+      operationId: deleteTask
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      responses:
+        '200':
+          description: Task deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /tasks/{taskId}/resume:
+    post:
+      tags: [Tasks]
+      summary: Resume paused task
+      description: |
+        Resume a task that's paused waiting for resume approval.
+        
+        **AUTO-SWITCHING:** If the task is not currently loaded in memory (is not the "current" task),
+        this endpoint will automatically switch to it before resuming. This means you can resume any
+        task from history without first calling `/tasks/{taskId}/switch`.
+        
+        **Requirements:**
+        - Task must be in "Resumable" state (waiting for resume approval)
+        - Tasks in other states (Running, Interactive, Idle) cannot be resumed
+        
+        **What it does:**
+        - Sends "yes" response to continue the task
+        - Equivalent to clicking "Resume Task" button in the UI
+      operationId: resumeTask
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      responses:
+        '200':
+          description: Task resumed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success, taskId, status]
+                properties:
+                  success:
+                    type: boolean
+                  taskId:
+                    type: string
+                  status:
+                    type: string
+                    example: "resumed"
+        '400':
+          description: Task is not in a resumable state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "BadRequestError"
+                message: "Task is not in a resumable state (current state: Running)"
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /tasks/{taskId}/respond:
+    post:
+      tags: [Tasks]
+      summary: Answer AI question
+      description: |
+        Respond to AI's follow-up question when task is paused waiting for user input.
+        
+        **AUTO-SWITCHING:** If the task is not currently loaded in memory, this endpoint
+        will automatically switch to it before responding.
+        
+        **What it does:**
+        - Sends your response to the AI
+        - Task must be waiting for a response (Interactive state)
+        - Response is processed exactly as if typed in the UI
+      operationId: respondToTask
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [response]
+              properties:
+                response:
+                  type: string
+                  description: Your response text to the AI's question
+                  minLength: 1
+                images:
+                  type: array
+                  description: Optional base64-encoded images to include
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Response sent to AI
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success, taskId, response]
+                properties:
+                  success:
+                    type: boolean
+                  taskId:
+                    type: string
+                  response:
+                    type: string
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /tasks/{taskId}/cancel:
+    post:
+      tags: [Tasks]
+      summary: Cancel task
+      description: Cancel a running task
+      operationId: cancelTask
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      responses:
+        '200':
+          description: Task cancelled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /tasks/{taskId}/switch:
+    post:
+      tags: [Tasks]
+      summary: Switch to task
+      description: |
+        Switch to a different task, making it the current active task.
+        
+        **What it does:**
+        1. Aborts the current task (if any) and cleans up its resources (terminals, browsers, etc.)
+        2. Loads the target task from persistent storage
+        3. Makes it the new current task in memory
+        
+        **Important:** Only ONE task can be current at a time. Switching tasks is destructive to the previous current task.
+        
+        **When to use:**
+        - You want to explicitly switch tasks without performing any other action
+        - You're preparing to perform multiple operations on a task
+        
+        **Note:** Endpoints like `/resume`, `/respond`, and queue operations will auto-switch if needed, so you may not need to call this explicitly.
+      operationId: switchTask
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      responses:
+        '200':
+          description: Task switched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success, taskId]
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  taskId:
+                    type: string
+                    description: The task that is now current
+                  previousTaskId:
+                    type: string
+                    nullable: true
+                    description: The task that was previously current (null if none)
+                  status:
+                    type: string
+                    description: Current status of the switched-to task
+                    enum: [Running, Interactive, Resumable, Idle]
+                  message:
+                    type: string
+                    example: "Task switched successfully"
+                  alreadyCurrent:
+                    type: boolean
+                    description: True if task was already current (no switch needed)
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          description: Failed to switch task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /tasks/current:
+    get:
+      tags: [Tasks]
+      summary: Get current task
+      description: Get the currently active task
+      operationId: getCurrentTask
+      responses:
+        '200':
+          description: Current task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '404':
+          description: No active task
+
+  /tasks/{taskId}/favorite:
+    post:
+      tags: [Tasks]
+      summary: Toggle favorite
+      description: Toggle task favorite status
+      operationId: toggleTaskFavorite
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      responses:
+        '200':
+          description: Favorite toggled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  isFavorite:
+                    type: boolean
+
+  /tasks/{taskId}/export:
+    post:
+      tags: [Tasks]
+      summary: Export task
+      description: Export task to markdown format
+      operationId: exportTask
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      responses:
+        '200':
+          description: Task exported
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  markdown:
+                    type: string
+
+  /tasks/{taskId}/condense:
+    post:
+      tags: [Tasks]
+      summary: Condense history
+      description: Condense task message history to reduce token usage
+      operationId: condenseTask
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      responses:
+        '200':
+          description: History condensed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /tasks/{taskId}/queue:
+    get:
+      tags: [Tasks]
+      summary: Get message queue
+      description: |
+        Get all queued messages for a task (messages sent while task is blocking).
+        
+        **AUTO-SWITCHING:** If the task is not currently loaded in memory, this endpoint
+        will automatically switch to it before getting the queue.
+      operationId: getTaskQueue
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      responses:
+        '200':
+          description: Message queue
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [taskId, messages, count]
+                properties:
+                  taskId:
+                    type: string
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/QueuedMessage'
+                  count:
+                    type: integer
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    post:
+      tags: [Tasks]
+      summary: Add message to queue
+      description: |
+        Add a message to the task's queue (will be auto-processed when task is ready).
+        
+        **AUTO-SWITCHING:** If the task is not currently loaded in memory, this endpoint
+        will automatically switch to it before adding the message.
+      operationId: addToTaskQueue
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [text]
+              properties:
+                text:
+                  type: string
+                  minLength: 1
+                images:
+                  type: array
+                  items:
+                    type: string
+                    description: Base64-encoded image data
+      responses:
+        '201':
+          description: Message added to queue
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success, taskId, message]
+                properties:
+                  success:
+                    type: boolean
+                  taskId:
+                    type: string
+                  message:
+                    $ref: '#/components/schemas/QueuedMessage'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Tasks]
+      summary: Clear message queue
+      description: |
+        Remove all messages from the task's queue.
+        
+        **AUTO-SWITCHING:** If the task is not currently loaded in memory, this endpoint
+        will automatically switch to it before clearing the queue.
+      operationId: clearTaskQueue
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      responses:
+        '200':
+          description: Queue cleared
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success, taskId, cleared]
+                properties:
+                  success:
+                    type: boolean
+                  taskId:
+                    type: string
+                  cleared:
+                    type: integer
+                    description: Number of messages cleared
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /tasks/{taskId}/queue/{messageId}:
+    put:
+      tags: [Tasks]
+      summary: Update queued message
+      description: |
+        Update the text/images of a queued message.
+        
+        **AUTO-SWITCHING:** If the task is not currently loaded in memory, this endpoint
+        will automatically switch to it before updating the message.
+      operationId: updateQueuedMessage
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+        - name: messageId
+          in: path
+          required: true
+          description: Message ID (UUID)
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [text]
+              properties:
+                text:
+                  type: string
+                  minLength: 1
+                images:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Message updated
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success, taskId, messageId]
+                properties:
+                  success:
+                    type: boolean
+                  taskId:
+                    type: string
+                  messageId:
+                    type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Tasks]
+      summary: Remove queued message
+      description: |
+        Remove a specific message from the task's queue.
+        
+        **AUTO-SWITCHING:** If the task is not currently loaded in memory, this endpoint
+        will automatically switch to it before removing the message.
+      operationId: removeQueuedMessage
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+        - name: messageId
+          in: path
+          required: true
+          description: Message ID (UUID)
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Message removed
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /tasks/batch:
+    delete:
+      tags: [Tasks]
+      summary: Batch delete tasks
+      description: Delete multiple tasks at once
+      operationId: batchDeleteTasks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [taskIds]
+              properties:
+                taskIds:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Tasks deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  deletedCount:
+                    type: integer
+
+  /tasks/{taskId}/todos:
+    get:
+      tags: [Tasks]
+      summary: Get task todos
+      description: Get todo list for a task
+      operationId: getTaskTodos
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      responses:
+        '200':
+          description: Task todos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  todos:
+                    type: array
+                    items:
+                      type: string
+
+    put:
+      tags: [Tasks]
+      summary: Update task todos
+      description: Update todo list for a task
+      operationId: updateTaskTodos
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [todos]
+              properties:
+                todos:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Todos updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /files:
+    get:
+      tags: [Files]
+      summary: List files
+      description: List files in a directory with optional recursive listing
+      operationId: listFiles
+      parameters:
+        - name: path
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: recursive
+          in: query
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: File list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  files:
+                    type: array
+                    items:
+                      type: string
+
+  /files/tree:
+    get:
+      tags: [Files]
+      summary: Get file tree
+      description: Get hierarchical file tree structure
+      operationId: getFileTree
+      parameters:
+        - name: path
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: File tree
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /files/content:
+    get:
+      tags: [Files]
+      summary: Read file
+      description: Read file contents with optional line range
+      operationId: readFile
+      parameters:
+        - name: path
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: startLine
+          in: query
+          schema:
+            type: integer
+        - name: endLine
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: File contents
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  content:
+                    type: string
+                  path:
+                    type: string
+                  lines:
+                    type: integer
+
+  /files/write:
+    post:
+      tags: [Files]
+      summary: Write file
+      description: Write or update file contents
+      operationId: writeFile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [path, content]
+              properties:
+                path:
+                  type: string
+                content:
+                  type: string
+      responses:
+        '200':
+          description: File written
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /files/search:
+    post:
+      tags: [Files]
+      summary: Search files
+      description: Search files using regex pattern
+      operationId: searchFiles
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [path, regex]
+              properties:
+                path:
+                  type: string
+                regex:
+                  type: string
+                filePattern:
+                  type: string
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+
+  /files/definitions:
+    get:
+      tags: [Files]
+      summary: List code definitions
+      description: List code definitions (classes, functions, etc.) in file or directory
+      operationId: listDefinitions
+      parameters:
+        - name: path
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Code definitions
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /files/batch:
+    post:
+      tags: [Files]
+      summary: Batch file operations
+      description: Perform multiple file operations in one request
+      operationId: batchFileOperations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [operations]
+              properties:
+                operations:
+                  type: array
+                  items:
+                    type: object
+      responses:
+        '200':
+          description: Operations completed
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /mcp/servers:
+    get:
+      tags: [MCP]
+      summary: List MCP servers
+      description: List all configured MCP servers
+      operationId: listMcpServers
+      responses:
+        '200':
+          description: Server list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  servers:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/McpServer'
+
+  /mcp/servers/{serverName}:
+    get:
+      tags: [MCP]
+      summary: Get MCP server details
+      description: Get details of a specific MCP server
+      operationId: getMcpServer
+      parameters:
+        - name: serverName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Server details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/McpServer'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /mcp/servers/{serverName}/tools/{toolName}:
+    post:
+      tags: [MCP]
+      summary: Call MCP tool
+      description: Execute a tool on an MCP server
+      operationId: callMcpTool
+      parameters:
+        - name: serverName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: toolName
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                arguments:
+                  type: object
+                  additionalProperties: true
+      responses:
+        '200':
+          description: Tool result
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /mcp/servers/{serverName}/resources:
+    get:
+      tags: [MCP]
+      summary: List MCP resources
+      description: List available resources on an MCP server
+      operationId: listMcpResources
+      parameters:
+        - name: serverName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Resource list
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /mcp/servers/{serverName}/resources/{resourceUri}:
+    get:
+      tags: [MCP]
+      summary: Read MCP resource
+      description: Read a specific resource from an MCP server
+      operationId: readMcpResource
+      parameters:
+        - name: serverName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: resourceUri
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Resource content
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /mcp/servers/{serverName}/prompts:
+    get:
+      tags: [MCP]
+      summary: List MCP prompts
+      description: List available prompts on an MCP server
+      operationId: listMcpPrompts
+      parameters:
+        - name: serverName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Prompt list
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /terminal/list:
+    get:
+      tags: [Terminal]
+      summary: List terminals
+      description: List all active terminal instances
+      operationId: listTerminals
+      responses:
+        '200':
+          description: Terminal list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  terminals:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Terminal'
+
+  /terminal/execute:
+    post:
+      tags: [Terminal]
+      summary: Execute command
+      description: Execute a terminal command
+      operationId: executeTerminalCommand
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [command]
+              properties:
+                command:
+                  type: string
+                cwd:
+                  type: string
+      responses:
+        '200':
+          description: Command executed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  terminalId:
+                    type: string
+                  output:
+                    type: string
+
+  /terminal/{terminalId}:
+    get:
+      tags: [Terminal]
+      summary: Get terminal info
+      description: Get information about a specific terminal
+      operationId: getTerminal
+      parameters:
+        - name: terminalId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Terminal info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Terminal'
+
+    delete:
+      tags: [Terminal]
+      summary: Close terminal
+      description: Close a terminal instance
+      operationId: closeTerminal
+      parameters:
+        - name: terminalId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Terminal closed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /codeindex/search:
+    post:
+      tags: [CodeIndex]
+      summary: Semantic code search
+      description: Search code semantically using embeddings
+      operationId: searchCodeIndex
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [query]
+              properties:
+                query:
+                  type: string
+                limit:
+                  type: integer
+                  default: 10
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /codeindex/stats:
+    get:
+      tags: [CodeIndex]
+      summary: Get index statistics
+      description: Get statistics about the code index
+      operationId: getCodeIndexStats
+      responses:
+        '200':
+          description: Index statistics
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /codeindex/rebuild:
+    post:
+      tags: [CodeIndex]
+      summary: Rebuild index
+      description: Rebuild the code index
+      operationId: rebuildCodeIndex
+      responses:
+        '200':
+          description: Rebuild started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /settings:
+    get:
+      tags: [Settings]
+      summary: Get all settings
+      description: Get all Hoody Code settings
+      operationId: getAllSettings
+      responses:
+        '200':
+          description: All settings
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+
+  /settings/{key}:
+    get:
+      tags: [Settings]
+      summary: Get setting
+      description: Get a specific setting by key
+      operationId: getSetting
+      parameters:
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Setting value
+          content:
+            application/json:
+              schema:
+                type: object
+
+    put:
+      tags: [Settings]
+      summary: Update setting
+      description: Update a specific setting
+      operationId: updateSetting
+      parameters:
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [value]
+              properties:
+                value:
+                  oneOf:
+                    - type: string
+                    - type: number
+                    - type: boolean
+                    - type: object
+      responses:
+        '200':
+          description: Setting updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /commands:
+    get:
+      tags: [Commands]
+      summary: List slash commands
+      description: List all available slash commands from all sources
+      operationId: listCommands
+      parameters:
+        - name: source
+          in: query
+          description: Filter by source
+          schema:
+            type: string
+            enum: [built-in, global, project]
+        - name: includeContent
+          in: query
+          description: Include full command content
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Command list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  commands:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Command'
+                  total:
+                    type: integer
+
+    post:
+      tags: [Commands]
+      summary: Create command
+      description: Create a new project-level slash command
+      operationId: createCommand
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, content]
+              properties:
+                name:
+                  type: string
+                  pattern: '^[a-zA-Z0-9_-]+$'
+                content:
+                  type: string
+                description:
+                  type: string
+                argumentHint:
+                  type: string
+      responses:
+        '201':
+          description: Command created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  command:
+                    $ref: '#/components/schemas/Command'
+
+  /commands/names:
+    get:
+      tags: [Commands]
+      summary: Get command names
+      description: Get list of command names for autocomplete
+      operationId: getCommandNames
+      responses:
+        '200':
+          description: Command names
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  names:
+                    type: array
+                    items:
+                      type: string
+                  total:
+                    type: integer
+
+  /commands/{commandName}:
+    get:
+      tags: [Commands]
+      summary: Get command
+      description: Get a specific slash command by name
+      operationId: getCommand
+      parameters:
+        - name: commandName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Command details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Command'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags: [Commands]
+      summary: Update command
+      description: Update an existing project-level command
+      operationId: updateCommand
+      parameters:
+        - name: commandName
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                description:
+                  type: string
+                argumentHint:
+                  type: string
+              minProperties: 1
+      responses:
+        '200':
+          description: Command updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  command:
+                    $ref: '#/components/schemas/Command'
+
+    delete:
+      tags: [Commands]
+      summary: Delete command
+      description: Delete a project-level slash command
+      operationId: deleteCommand
+      parameters:
+        - name: commandName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Command deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+
+
+    ProfileListItem:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: string
+          description: Unique profile identifier
+        name:
+          type: string
+          description: Profile name
+        apiProvider:
+          type: string
+          description: AI provider type
+          enum: [anthropic, openai, openrouter, bedrock, vertex, openai-native, ollama, lmstudio, gemini, mistral, cerebras, openai-compatible, roo]
+        modelId:
+          type: string
+          description: Model identifier (cleaned, without prefix)
+
+    Profile:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: string
+          description: Unique profile identifier
+        name:
+          type: string
+          description: Profile name
+        apiProvider:
+          type: string
+          description: AI provider type
+        apiModelId:
+          type: string
+          description: Full model identifier
+        temperature:
+          type: number
+          description: Model temperature (0-2)
+        maxTokens:
+          type: number
+          description: Maximum tokens for response
+        # Note: API keys and other secrets are automatically redacted in responses
+  /commands/{commandName}/execute:
+    post:
+      tags: [Commands]
+      summary: Execute command
+      description: Execute a slash command by creating a task with its content
+      operationId: executeCommand
+      parameters:
+        - name: commandName
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                args:
+                  type: string
+                mode:
+                  type: string
+                images:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: Command executed (task created)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  taskId:
+                    type: string
+                  commandName:
+                    type: string
+                  commandSource:
+                    type: string
+
+  /commands/{commandName}/validate:
+    post:
+      tags: [Commands]
+      summary: Validate command
+      description: Validate command content without creating it
+      operationId: validateCommand
+      parameters:
+        - name: commandName
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [content]
+              properties:
+                content:
+                  type: string
+      responses:
+        '200':
+          description: Validation result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  valid:
+                    type: boolean
+                  frontmatter:
+                    type: object
+                  contentPreview:
+                    type: string
+                  contentLength:
+                    type: integer
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: |
+        API token from Hoody Code settings. Include in Authorization header:
+        `Authorization: Bearer YOUR_TOKEN`
+
+  parameters:
+    TaskId:
+      name: taskId
+      in: path
+      required: true
+      description: Unique task identifier (UUID)
+      schema:
+        type: string
+        format: uuid
+
+  responses:
+    Unauthorized:
+      description: Authentication required or token invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "Unauthorized"
+            message: "Missing or invalid authentication token"
+            code: "AUTH_REQUIRED"
+
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "BadRequestError"
+            message: "Invalid parameter: mode must be one of: code, architect, debug, ask"
+            code: "BAD_REQUEST"
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "NotFoundError"
+            message: "Task abc-123 not found"
+            code: "NOT_FOUND"
+
+  schemas:
+    HealthResponse:
+      type: object
+      required: [status, version, uptime, activeConnections]
+      properties:
+        status:
+          type: string
+          enum: [ok, error]
+        version:
+          type: string
+          example: "4.103.1"
+        uptime:
+          type: number
+          description: Server uptime in seconds
+        activeConnections:
+          type: integer
+          description: Number of active WebSocket connections
+
+    StateResponse:
+      type: object
+      description: Current application state
+      properties:
+        taskId:
+          type: string
+        mode:
+          type: string
+        messages:
+          type: array
+          items:
+            type: object
+
+    CreateTaskRequest:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+          description: Task instruction or prompt
+          minLength: 1
+        modeSlug:
+          type: string
+          description: Mode to run task in
+          enum: [code, architect, debug, ask, orchestrator]
+          default: code
+        images:
+          type: array
+          description: Base64-encoded images to include
+          items:
+            type: string
+
+    TaskCreatedResponse:
+      type: object
+      required: [taskId, status]
+      properties:
+        taskId:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [active, waiting]
+
+    TaskResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        mode:
+          type: string
+        createdAt:
+          type: number
+        updatedAt:
+          type: number
+        state:
+          type: object
+        isFavorite:
+          type: boolean
+
+    TaskListResponse:
+      type: object
+      required: [tasks, total, limit, offset]
+      properties:
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskResponse'
+        total:
+          type: integer
+        limit:
+          type: integer
+        offset:
+          type: integer
+        hasMore:
+          type: boolean
+
+    McpServer:
+      type: object
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+          enum: [connected, disconnected, error]
+        tools:
+          type: array
+          items:
+            type: object
+        resources:
+          type: array
+          items:
+            type: object
+
+    Terminal:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        isActive:
+          type: boolean
+        cwd:
+          type: string
+
+    Command:
+      type: object
+      required: [name, content, source, filePath]
+      properties:
+        name:
+          type: string
+          description: Command name (without / prefix)
+        content:
+          type: string
+          description: Full command template (markdown)
+        source:
+          type: string
+          enum: [built-in, global, project]
+          description: Command source/priority level
+        filePath:
+          type: string
+          description: File path (or <built-in:name> for built-in commands)
+        description:
+          type: string
+          description: Short description shown in autocomplete
+        argumentHint:
+          type: string
+          description: Hint about command arguments
+
+    QueuedMessage:
+      type: object
+      required: [id, timestamp, text]
+      properties:
+        id:
+          type: string
+          description: Message ID (UUID)
+        timestamp:
+          type: integer
+          description: Unix timestamp when message was queued
+        text:
+          type: string
+          description: Message text content
+        images:
+          type: array
+          items:
+            type: string
+          description: Base64-encoded images (optional)
+
+    SuccessResponse:
+      type: object
+      required: [success]
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+          description: Error type/class name
+        message:
+          type: string
+          description: Human-readable error message
+        code:
+          type: string
+          description: Machine-readable error code
+        statusCode:
+          type: integer
+          description: HTTP status code

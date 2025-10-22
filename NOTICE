@@ -1,0 +1,27 @@
+Hoody Code
+Copyright 2025- Hoody Ltd (hoody.com)
+
+This product is a fork and integration of multiple open-source projects:
+
+- Roo Code (https://github.com/RooVetGit/Roo-Code)
+  - Roo Code is itself a fork of Cline
+  
+- Cline (https://github.com/cline/cline)
+  - Original autonomous coding agent for VS Code
+
+- Kilo Code
+  - Contributed features and enhancements
+
+- Codex
+  - Provided inspiration and architectural patterns
+
+- Goose (https://github.com/square/goose)
+  - Inspired certain agent interaction patterns
+
+We are grateful to all the contributors of these projects for their work in advancing
+AI-assisted development tools. This project builds upon their foundations while
+focusing on creating a powerful Agent Server architecture that enables remote UI
+development and multi-instance deployments.
+
+All original code and modifications are Copyright 2025- Hoody Ltd.
+Licensed under the Apache License 2.0 (see LICENSE file). 
