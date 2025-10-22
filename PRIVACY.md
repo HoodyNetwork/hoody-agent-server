@@ -1,3 +1,9 @@
+<!--
+  Privacy Policy & Data Handling Documentation
+  Details on data collection, processing, storage, and third-party sharing
+  Last updated: 2025
+-->
+
 # Hoody Code Privacy Policy
 
 **Last Updated: July 22, 2025**
