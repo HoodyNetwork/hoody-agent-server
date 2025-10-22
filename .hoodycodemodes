@@ -1,4 +1,5 @@
 {
+	"_description": "Custom AI Mode Definitions - Specialized AI assistant modes with specific capabilities and permissions",
 	"customModes": [
 		{
 			"slug": "translate",
