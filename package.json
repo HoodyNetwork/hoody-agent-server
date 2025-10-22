@@ -1,4 +1,5 @@
 {
+	"_description": "Hoody Agent Server - Monorepo root package managing workspace dependencies and build scripts",
 	"name": "hoody-server-agent",
 	"packageManager": "pnpm@10.8.1",
 	"engines": {
