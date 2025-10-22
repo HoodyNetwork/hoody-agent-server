@@ -1,7 +1,7 @@
 import * as vscode from "vscode"
 import * as dotenvx from "@dotenvx/dotenvx"
 import * as path from "path"
-import { LogBufferService } from "./services/logs/LogBufferService.js"
+import { LogBufferService } from "./services/logs/LogBufferService"
 
 // Load environment variables from .env file
 try {
