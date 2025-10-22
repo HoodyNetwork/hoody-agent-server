@@ -1,3 +1,7 @@
+# Docker Build Optimization
+# This file excludes unnecessary files from Docker image builds to minimize image size
+# and improve build performance. Only production-ready code and dependencies are included.
+
 # git
 .git
 
