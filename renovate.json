@@ -1,5 +1,6 @@
 {
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"_description": "Automated dependency updates via Renovate Bot - monitors npm packages and creates PRs for updates",
 	"extends": ["config:recommended"],
 	"forkProcessing": "enabled",
 	"ignoreDeps": ["@vscode/vsce"]
