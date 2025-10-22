@@ -1,3 +1,9 @@
+<!--
+  Developer Guide for Hoody Agent Server
+  Setup instructions, development workflow, and contribution guidelines
+  Focus: CLI server development, REST API, and custom UI integration
+-->
+
 # Hoody Agent Server Development Guide
 
 Welcome to the Hoody Agent Server development guide! This document will help you set up your development environment and understand how to work with the codebase. **The primary focus is now the CLI server** that exposes AI coding agents via REST API and WebSocket. Whether you're fixing bugs, adding features, or just exploring the code, this guide will get you started.
