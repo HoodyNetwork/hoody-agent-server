@@ -1,13 +1,5 @@
 import { Controller, Get, Request, Route, Tags } from "tsoa"
-
-/**
- * Represents a single log entry with a timestamp and message.
- * @example { "timestamp": "2023-10-27T10:00:00.000Z", "message": "User logged in" }
- */
-export interface LogEntry {
-	timestamp: string
-	message: string
-}
+import type { LogEntry } from "../../logs/LogBufferService"
 
 /**
  * Response containing log entries and buffer metadata.
@@ -40,19 +32,19 @@ export class LogsController extends Controller {
 	public async getLogs(@Request() req: any): Promise<LogsResponse> {
 		// Parse and validate input with strict bounds
 		let requestedLines = LogsController.DEFAULT_LINES
-		
-		const linesParam = (req?.query?.lines as string | undefined)
+
+		const linesParam = req?.query?.lines as string | undefined
 		if (typeof linesParam === "string") {
 			const parsed = parseInt(linesParam, 10)
-			
+
 			// Validate: must be a valid positive number within bounds
 			if (!isNaN(parsed) && parsed >= LogsController.MIN_LINES) {
 				requestedLines = Math.min(parsed, LogsController.MAX_LINES)
 			}
 		}
-		
+
 		const logBuffer = (global as any).logBuffer
-		
+
 		if (!logBuffer) {
 			throw new Error("Log buffer service not initialized")
 		}
