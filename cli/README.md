@@ -1,3 +1,9 @@
+<!--
+  CLI Server Documentation
+  Fast, asynchronous AI agent server exposing REST API and WebSocket interfaces
+  Provides headless VS Code extension capabilities for remote AI coding assistance
+-->
+
 # Hoody Agent Server - CLI
 
 > Fast, asynchronous AI coding agent server with REST API and WebSocket support
