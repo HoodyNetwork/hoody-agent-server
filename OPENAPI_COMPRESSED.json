@@ -3983,13 +3983,14 @@
 				"type": "object"
 			},
 			"LogEntry": {
-				"description": "A single log entry with timestamp",
+				"description": "Represents a single log entry with timestamp and message",
 				"properties": { "timestamp": { "type": "string" }, "message": { "type": "string" } },
 				"required": ["timestamp", "message"],
-				"type": "object"
+				"type": "object",
+				"example": { "timestamp": "2023-10-27T10:00:00.000Z", "message": "User logged in" }
 			},
 			"LogsResponse": {
-				"description": "Response containing log entries and buffer metadata.",
+				"description": "Response containing log entries and buffer metadata",
 				"properties": {
 					"logs": { "items": { "$ref": "#/components/schemas/LogEntry" }, "type": "array" },
 					"totalInBuffer": { "type": "number" },
