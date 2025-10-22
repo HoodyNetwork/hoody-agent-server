@@ -1,8 +1,16 @@
 import { Controller, Get, Request, Route, Tags } from "tsoa"
-import { LogEntry } from "../../logs/LogBufferService"
 
 /**
- * Response containing log entries
+ * Represents a single log entry with a timestamp and message.
+ * @example { "timestamp": "2023-10-27T10:00:00.000Z", "message": "User logged in" }
+ */
+export interface LogEntry {
+	timestamp: string
+	message: string
+}
+
+/**
+ * Response containing log entries and buffer metadata.
  */
 interface LogsResponse {
 	logs: LogEntry[]

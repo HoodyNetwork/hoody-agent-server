@@ -6529,7 +6529,7 @@ components:
         - mcpId
       type: object
     LogEntry:
-      description: A single log entry with timestamp
+      description: Represents a single log entry with a timestamp and message.
       properties:
         timestamp:
           type: string
@@ -6539,8 +6539,11 @@ components:
         - timestamp
         - message
       type: object
+      example:
+        timestamp: 2023-10-27T10:00:00.000Z
+        message: User logged in
     LogsResponse:
-      description: Response containing log entries
+      description: Response containing log entries and buffer metadata.
       properties:
         logs:
           items:
