@@ -102,7 +102,7 @@ npm run start
 **With Custom Options:**
 
 ```bash
-npm run start -- --port 3000 --debug
+npm run start -- --port 3000 --host localhost --token XXXXX --debug
 ```
 
 **Quick Start with AI Provider:**
