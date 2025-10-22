@@ -72,7 +72,7 @@ A fast, standalone, asynchronous AI agent that provides all the capabilities of 
 
 ### Prerequisites
 
-- **Node.js 22+** (recommended)
+- **Node.js 20+** (recommended)
 - **pnpm** (package manager)
 - Git
 
