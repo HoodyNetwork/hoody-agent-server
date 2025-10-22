@@ -1,3 +1,7 @@
+# Development Container for Hoody Agent Server
+# Provides standardized Node.js development environment matching production requirements
+# Based on flake.nix configuration for cross-platform consistency
+
 # Hoody Code Development Container
 # Based on flake.nix dependencies for standardized development environment
 
