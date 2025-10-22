@@ -17,7 +17,7 @@
 		"test": "turbo test --log-order grouped --output-logs new-only",
 		"format": "turbo format --log-order grouped --output-logs new-only",
 		"build": "pnpm build:server",
-		"build:server": "pnpm --filter hoody-code run bundle && pnpm --filter @hoodycode/cli run build",
+		"build:server": "pnpm --filter @roo-code/build run build && pnpm --filter hoody-code run bundle && pnpm --filter @hoodycode/cli run build",
 		"build:vsix": "pnpm vsix",
 		"package": "cd src && npm version patch --no-git-tag-version && pnpm bundle && npx @vscode/vsce package --no-dependencies -o ../bin && cd ..",
 		"bundle": "turbo bundle --log-order grouped --output-logs new-only",
