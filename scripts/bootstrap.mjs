@@ -1,10 +1,10 @@
+#!/usr/bin/env node
+
 /**
  * Bootstrap Script - Ensures pnpm package manager is available
  * Automatically installs pnpm if not found globally and runs installation
  * Used by npm/yarn install hooks to transition to pnpm seamlessly
  */
-
-#!/usr/bin/env node
 
 import { spawnSync } from "child_process"
 import { existsSync, writeFileSync } from "fs"

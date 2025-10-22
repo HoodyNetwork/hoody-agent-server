@@ -2,7 +2,7 @@
 
 // Check Node.js version before any imports
 const nodeVersion = process.versions.node
-const majorVersion = parseInt(nodeVersion.split('.')[0], 10)
+const majorVersion = parseInt(nodeVersion.split(".")[0] || "0", 10)
 
 if (majorVersion < 20) {
 	process.stderr.write(`❌ Node.js ${nodeVersion} is not supported.\n`)
@@ -33,7 +33,7 @@ import { Package } from "./constants/package.js"
 function getDefaultWorkspace(): string {
 	const cwd = process.cwd()
 	// If current directory ends with 'cli', use parent directory
-	if (cwd.endsWith('/cli') || cwd.endsWith('\\cli')) {
+	if (cwd.endsWith("/cli") || cwd.endsWith("\\cli")) {
 		return dirname(cwd)
 	}
 	return cwd

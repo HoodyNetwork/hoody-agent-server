@@ -224,7 +224,7 @@ export function mapCliParamsToProviderConfig(params: {
  * Get the provider name from a string, with validation
  */
 export function getProviderName(provider: string): ProviderName | null {
-	const validProviders: ProviderName[] = [
+	const validProviders: string[] = [
 		"hoodycode",
 		"anthropic",
 		"openrouter",
@@ -268,7 +268,7 @@ export function getProviderName(provider: string): ProviderName | null {
 		"synthetic",
 	]
 
-	if (validProviders.includes(provider as ProviderName)) {
+	if (validProviders.includes(provider)) {
 		return provider as ProviderName
 	}
 
