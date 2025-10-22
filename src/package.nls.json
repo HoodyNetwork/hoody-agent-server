@@ -1,6 +1,5 @@
 {
 	"_description": "English (default) localization strings for VS Code extension manifest and UI elements",
-{
 	"extension.displayName": "Hoody Code AI Agent",
 	"extension.description": "Open Source AI coding assistant for planning, building, and fixing code.",
 	"views.contextMenu.label": "Hoody Code",

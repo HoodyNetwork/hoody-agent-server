@@ -1,7 +1,7 @@
 import * as vscode from "vscode"
 import * as dotenvx from "@dotenvx/dotenvx"
 import * as path from "path"
-import { LogBufferService } from "./services/logs/LogBufferService"
+import { LogBufferService } from "./services/logs/LogBufferService.js"
 
 // Load environment variables from .env file
 try {
@@ -78,8 +78,8 @@ export async function activate(context: vscode.ExtensionContext) {
 	outputChannel = logBuffer
 	context.subscriptions.push(outputChannel)
 
-		// Make logBuffer globally accessible for API
-		; (global as any).logBuffer = logBuffer
+	// Make logBuffer globally accessible for API
+	;(global as any).logBuffer = logBuffer
 
 	outputChannel.appendLine(`${Package.name} extension activated - ${JSON.stringify(Package)}`)
 

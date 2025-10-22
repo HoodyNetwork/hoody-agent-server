@@ -72,9 +72,11 @@ A fast, standalone, asynchronous AI agent that provides all the capabilities of 
 
 ### Prerequisites
 
-- **Node.js 20+** (recommended)
-- **pnpm** (package manager)
+- **Node.js 20.x - 22.x** (required - Node 23+ not yet supported)
+- **pnpm** (package manager - **REQUIRED**, npm will not work as this is a pnpm workspace monorepo)
 - Git
+
+> **⚠️ Important:** This project uses **pnpm workspaces**. You **MUST** use `pnpm` - `npm install` will fail with `EUNSUPPORTEDPROTOCOL` errors. Install pnpm with: `npm install -g pnpm`
 
 ### 1. Clone & Build
 
@@ -87,7 +89,7 @@ cd hoody-agent-server
 pnpm install
 
 # Build everything (extension + CLI server in one command)
-pnpm build:server
+pnpm build
 ```
 
 ### 2. Start the Server
