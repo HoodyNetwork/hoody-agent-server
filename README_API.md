@@ -1,3 +1,9 @@
+<!-- 
+  Hoody Agent Server API Documentation
+  Complete REST and WebSocket API reference with 80+ endpoints
+  This file documents all API endpoints, request/response formats, and usage examples
+-->
+
 # Hoody Agent Server API Documentation
 
 This document provides a comprehensive overview of the Hoody Agent Server REST and WebSocket API, including authentication, endpoints, and usage examples.
