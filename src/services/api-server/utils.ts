@@ -166,21 +166,16 @@ export function isOriginAllowed(origin: string | undefined, allowedOrigins: stri
 /**
  * Create a debounced function
  */
-export function debounce<T extends (...args: any[]) => any>(
-	func: T,
-	wait: number,
-): (...args: Parameters<T>) => void {
+export function debounce<T extends (...args: any[]) => any>(func: T, wait: number): (...args: Parameters<T>) => void {
 	let timeout: NodeJS.Timeout | null = null
 
-	return function (this: any, ...args: Parameters<T>) {
-		const context = this
-
+	return function (this: unknown, ...args: Parameters<T>) {
 		if (timeout) {
 			clearTimeout(timeout)
 		}
 
 		timeout = setTimeout(() => {
-			func.apply(context, args)
+			func.apply(this, args)
 		}, wait)
 	}
 }
@@ -286,9 +281,10 @@ export function redactSecretsDeep<T = any>(input: T): T {
 	// Match actual secret field names, not fields that just contain these words
 	// Use word boundaries and specific patterns to avoid false positives
 	const secretKeyRegex = /^(.*apiKey|.*token|.*password|.*secret|.*authorization)$/i
-	
+
 	// Whitelist: fields that contain these words but are NOT secrets
-	const whitelistRegex = /^(maxTokens|modelMaxTokens|includeMaxTokens|modelMaxThinkingTokens|claudeCodeMaxOutputTokens|contextWindow|supportsPromptCache|rateLimitSeconds|diffEnabled|fuzzyMatchThreshold|todoListEnabled|consecutiveMistakeLimit|taskAutoInitEnabled|taskAutoInitSlashCommand|taskAutoInitMessage)$/i
+	const whitelistRegex =
+		/^(maxTokens|modelMaxTokens|includeMaxTokens|modelMaxThinkingTokens|claudeCodeMaxOutputTokens|contextWindow|supportsPromptCache|rateLimitSeconds|diffEnabled|fuzzyMatchThreshold|todoListEnabled|consecutiveMistakeLimit|taskAutoInitEnabled|taskAutoInitSlashCommand|taskAutoInitMessage)$/i
 
 	function redact(value: any): any {
 		if (value === null || value === undefined) return value

@@ -20,7 +20,7 @@ import { FollowUpData, SuggestionItem } from "@roo-code/types"
 import { combineApiRequests } from "@roo/combineApiRequests"
 import { combineCommandSequences } from "@roo/combineCommandSequences"
 import { getApiMetrics } from "@roo/getApiMetrics"
-import { AudioType, WebviewMessage } from "@roo/WebviewMessage"
+import { AudioType } from "@roo/WebviewMessage"
 import { getAllModes } from "@roo/modes"
 import { ProfileValidator } from "@roo/ProfileValidator"
 import { getLatestTodo } from "@roo/todo"
@@ -898,18 +898,21 @@ const ChatViewComponent: React.ForwardRefRenderFunction<ChatViewRef, ChatViewPro
 	useEvent("message", handleMessage)
 
 	// Listen for forkCounts response from extension and update state for current task
-	const handleForkCounts = useCallback((e: MessageEvent) => {
-		const message = e.data as any
-		if (message?.type === "forkCountsResponse") {
-			const result = message.values || {}
-			const counts = result.counts || {}
-			const taskId = result.taskId
-			if (!currentTaskItem || taskId !== currentTaskItem.id) {
-				return
+	const handleForkCounts = useCallback(
+		(e: MessageEvent) => {
+			const message = e.data as any
+			if (message?.type === "forkCountsResponse") {
+				const result = message.values || {}
+				const counts = result.counts || {}
+				const taskId = result.taskId
+				if (!currentTaskItem || taskId !== currentTaskItem.id) {
+					return
+				}
+				setForkCountsByTs(counts as Record<number, number>)
 			}
-			setForkCountsByTs(counts as Record<number, number>)
-		}
-	}, [currentTaskItem])
+		},
+		[currentTaskItem],
+	)
 
 	useEvent("message", handleForkCounts)
 

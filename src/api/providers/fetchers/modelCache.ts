@@ -68,7 +68,7 @@ export const getModels = async (options: GetModelsOptions): Promise<ModelRecord>
 
 	try {
 		switch (provider) {
-			case "openrouter":
+			case "openrouter": {
 				// hoodycode_change start: base url and bearer token
 				const openRouterBaseUrl = options.baseUrl || "https://openrouter.ai/api/v1"
 				console.log(`[getModels] Fetching OpenRouter models from: ${openRouterBaseUrl}`)
@@ -78,6 +78,7 @@ export const getModels = async (options: GetModelsOptions): Promise<ModelRecord>
 				})
 				// hoodycode_change end
 				break
+			}
 			case "requesty":
 				// Requesty models endpoint requires an API key for per-user custom policies.
 				models = await getRequestyModels(options.baseUrl, options.apiKey)

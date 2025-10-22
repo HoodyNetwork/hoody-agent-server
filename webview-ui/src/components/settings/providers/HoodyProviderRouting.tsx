@@ -7,7 +7,6 @@ import {
 
 import { useAppTranslation } from "@src/i18n/TranslationContext"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectSeparator } from "@src/components/ui"
-import { z } from "zod"
 import { safeJsonParse } from "@roo/safeJsonParse"
 import { useModelProviders } from "@/components/ui/hooks/useSelectedModel"
 import { cn } from "@/lib/utils"
