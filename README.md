@@ -12,30 +12,31 @@ A fast, standalone, asynchronous AI agent that provides all the capabilities of 
 
 ## 🎁 Great Features
 
-| Feature | Description |
-|---------|-------------|
-| **⚡ HTTP API** | **Control autonomous AI coding agents by literally just sending JSON** - no SDKs, no complex integrations, no lock-in. Build agent-into-agent workflows (agents calling agents) with pure HTTP. If you can make an HTTP request, you can build AI coding tools |
-| **🚀 Async Agent** | **Run unlimited concurrent tasks on each instance** - each lightweight server instance (~250MB RAM) can handle unlimited tasks simultaneously with safe file queuing. Scale horizontally with multiple instances for massive parallel execution. Perfect for 24/7 autonomous operations, batch processing, and production-scale AI workflows |
-| **🤖 Universal AI** | Compatible with 30+ model providers: Anthropic, OpenAI, Google Gemini, OpenRouter, AWS Bedrock, Azure, Ollama, LM Studio, and more |
-| **🔄 Task Forking** | Fork tasks from any message to explore alternative approaches without losing progress |
-| **🔀 Dynamic Mode** | Switch between Code, Architect, Ask, Debug, and Orchestrator modes mid-development based on your needs |
-| **🪃 Sub-Agents (Orchestrator)** | Agents can spawn and coordinate sub-agents for complex multi-step tasks, creating hierarchical workflows |
-| **💾 Memory Bank** | Persistent AI knowledge storage - the agent remembers patterns, solutions, and best practices across sessions |
-| **🔄 Context Condensing** | Automatic context window management - intelligently compresses conversation history when approaching token limits - allowing 24/7 operations |
-| **🎨 Image Generation** | Built-in AI image generation and editing capabilities through OpenRouter integration |
-| **⚡ Slash Commands** | Extensible command system - create custom prompts and workflows as reusable slash commands |
-| **🌐 Browser Automation** | Built-in Puppeteer for web testing, scraping, and interaction |
-| **💻 Terminal Control** | Execute commands and monitor output programmatically with full shell integration |
-| **📁 File Operations** | Complete filesystem access: read, write, diff, search & replace, insert content |
-| **🔒 Concurrent Editing** | Automatic file locking system - you can write code alongside the agent without conflicts. Lock files are transparent and don't clutter your codebase |
-| **✅ TODO Management** | Built-in task tracking with automatic status updates and Markdown import/export |
-| **💾 Server-Side Storage** | All conversation history, task state, profiles, and agent memory stored server-side - **clients stay completely stateless**. No databases or storage management needed on your end |
+| Feature                          | Description                                                                                                                                                                                                                                                                                                                                  |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **⚡ HTTP API**                  | **Control autonomous AI coding agents by literally just sending JSON** - no SDKs, no complex integrations, no lock-in. Build agent-into-agent workflows (agents calling agents) with pure HTTP. If you can make an HTTP request, you can build AI coding tools                                                                               |
+| **🚀 Async Agent**               | **Run unlimited concurrent tasks on each instance** - each lightweight server instance (~250MB RAM) can handle unlimited tasks simultaneously with safe file queuing. Scale horizontally with multiple instances for massive parallel execution. Perfect for 24/7 autonomous operations, batch processing, and production-scale AI workflows |
+| **🤖 Universal AI**              | Compatible with 30+ model providers: Anthropic, OpenAI, Google Gemini, OpenRouter, AWS Bedrock, Azure, Ollama, LM Studio, and more                                                                                                                                                                                                           |
+| **🔄 Task Forking**              | Fork tasks from any message to explore alternative approaches without losing progress                                                                                                                                                                                                                                                        |
+| **🔀 Dynamic Mode**              | Switch between Code, Architect, Ask, Debug, and Orchestrator modes mid-development based on your needs                                                                                                                                                                                                                                       |
+| **🪃 Sub-Agents (Orchestrator)** | Agents can spawn and coordinate sub-agents for complex multi-step tasks, creating hierarchical workflows                                                                                                                                                                                                                                     |
+| **💾 Memory Bank**               | Persistent AI knowledge storage - the agent remembers patterns, solutions, and best practices across sessions                                                                                                                                                                                                                                |
+| **🔄 Context Condensing**        | Automatic context window management - intelligently compresses conversation history when approaching token limits - allowing 24/7 operations                                                                                                                                                                                                 |
+| **🎨 Image Generation**          | Built-in AI image generation and editing capabilities through OpenRouter integration                                                                                                                                                                                                                                                         |
+| **⚡ Slash Commands**            | Extensible command system - create custom prompts and workflows as reusable slash commands                                                                                                                                                                                                                                                   |
+| **🌐 Browser Automation**        | Built-in Puppeteer for web testing, scraping, and interaction                                                                                                                                                                                                                                                                                |
+| **💻 Terminal Control**          | Execute commands and monitor output programmatically with full shell integration                                                                                                                                                                                                                                                             |
+| **📁 File Operations**           | Complete filesystem access: read, write, diff, search & replace, insert content                                                                                                                                                                                                                                                              |
+| **🔒 Concurrent Editing**        | Automatic file locking system - you can write code alongside the agent without conflicts. Lock files are transparent and don't clutter your codebase                                                                                                                                                                                         |
+| **✅ TODO Management**           | Built-in task tracking with automatic status updates and Markdown import/export                                                                                                                                                                                                                                                              |
+| **💾 Server-Side Storage**       | All conversation history, task state, profiles, and agent memory stored server-side - **clients stay completely stateless**. No databases or storage management needed on your end                                                                                                                                                           |
 
 ---
 
 ## 🎯 What Makes This Different?
 
 **The Problem:** Building AI coding assistants like Cline, Roo Code, or Claude Code requires deep knowledge of:
+
 - Agentic AI architectures
 - VS Code extension APIs
 - Complex tool orchestration
@@ -50,7 +51,6 @@ A fast, standalone, asynchronous AI agent that provides all the capabilities of 
 <p align="center">
   <img src="https://raw.githubusercontent.com/HoodyNetwork/hoody-agent-server/refs/heads/main/hoody.gif" width="100%" />
 </p>
-
 
 ---
 
@@ -90,7 +90,6 @@ pnpm install
 pnpm build:server
 ```
 
-
 ### 2. Start the Server
 
 ```bash
@@ -99,11 +98,13 @@ npm run start
 ```
 
 **With Custom Options:**
+
 ```bash
 npm run start -- --port 3000 --debug
 ```
 
 **Quick Start with AI Provider:**
+
 ```bash
 # Anthropic
 npm run start -- --provider anthropic --model claude-sonnet-4-20250514 --api-key sk-ant-xxx
@@ -116,6 +117,7 @@ npm run start -- --provider ollama --model llama3.2 --provider-base-url http://l
 ```
 
 **Production Setup with SSL:**
+
 ```bash
 npm run start -- \
   --port 443 \
@@ -134,25 +136,26 @@ npm run start -- \
 
 **All Available CLI Options:**
 
-| Flag | Description | Default |
-|------|-------------|---------|
-| `-p, --port <port>` | Server port number | `3000` |
-| `-H, --host <host>` | Host address to bind to | `0.0.0.0` |
-| `-w, --workspace <path>` | Workspace directory path (must exist) | Current directory |
-| `-t, --token <token>` | Authentication token | Auto-generated |
-| `-s, --storage-dir <path>` | Custom storage directory (auto-created if needed) | OS-specific* |
-| `--process-title <title>` | Process title for identification (ps/htop) | `hoody-ai` |
-| `--ssl-cert <path>` | Path to SSL certificate (PEM format) | None (HTTP) |
-| `--ssl-key <path>` | Path to SSL private key (PEM format) | None (HTTP) |
-| `--ssl-ca <path>` | Path to SSL CA certificate (optional) | None |
-| `--ssl-domain <domain>` | Domain name to enforce when using SSL | None |
-| `-d, --debug` | Enable debug logging | `false` |
-| `--provider <name>` | AI provider (anthropic, openrouter, ollama, etc.) | None |
-| `--model <model-id>` | Model identifier (auto-mapped to provider-specific field) | None |
-| `--api-key <key>` | API key (auto-mapped to provider-specific field) | None |
-| `--provider-base-url <url>` | Custom base URL for the provider | None |
+| Flag                        | Description                                               | Default           |
+| --------------------------- | --------------------------------------------------------- | ----------------- |
+| `-p, --port <port>`         | Server port number                                        | `3000`            |
+| `-H, --host <host>`         | Host address to bind to                                   | `0.0.0.0`         |
+| `-w, --workspace <path>`    | Workspace directory path (must exist)                     | Current directory |
+| `-t, --token <token>`       | Authentication token                                      | Auto-generated    |
+| `-s, --storage-dir <path>`  | Custom storage directory (auto-created if needed)         | OS-specific\*     |
+| `--process-title <title>`   | Process title for identification (ps/htop)                | `hoody-ai`        |
+| `--ssl-cert <path>`         | Path to SSL certificate (PEM format)                      | None (HTTP)       |
+| `--ssl-key <path>`          | Path to SSL private key (PEM format)                      | None (HTTP)       |
+| `--ssl-ca <path>`           | Path to SSL CA certificate (optional)                     | None              |
+| `--ssl-domain <domain>`     | Domain name to enforce when using SSL                     | None              |
+| `-d, --debug`               | Enable debug logging                                      | `false`           |
+| `--provider <name>`         | AI provider (anthropic, openrouter, ollama, etc.)         | None              |
+| `--model <model-id>`        | Model identifier (auto-mapped to provider-specific field) | None              |
+| `--api-key <key>`           | API key (auto-mapped to provider-specific field)          | None              |
+| `--provider-base-url <url>` | Custom base URL for the provider                          | None              |
 
-**Default Storage Locations:***
+**Default Storage Locations:\***
+
 - **Windows:** `%LOCALAPPDATA%\hoodycode` (e.g., `C:\Users\YourName\AppData\Local\hoodycode`)
 - **macOS:** `~/Library/Application Support/hoodycode`
 - **Linux:** `~/.local/share/hoodycode` (follows [XDG Base Directory spec](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html))
@@ -199,11 +202,12 @@ curl -X POST http://localhost:3000/api/v1/agent/profiles \
 
 ```json
 {
-  "apiProvider": "anthropic",
-  "apiModelId": "claude-sonnet-4-20250514",
-  "apiKey": "sk-ant-..."
+	"apiProvider": "anthropic",
+	"apiModelId": "claude-sonnet-4-20250514",
+	"apiKey": "sk-ant-..."
 }
 ```
+
 </details>
 
 <details>
@@ -211,11 +215,12 @@ curl -X POST http://localhost:3000/api/v1/agent/profiles \
 
 ```json
 {
-  "apiProvider": "openrouter",
-  "openRouterApiKey": "sk-or-v1-...",
-  "openRouterModelId": "anthropic/claude-sonnet-4"
+	"apiProvider": "openrouter",
+	"openRouterApiKey": "sk-or-v1-...",
+	"openRouterModelId": "anthropic/claude-sonnet-4"
 }
 ```
+
 </details>
 
 <details>
@@ -223,11 +228,12 @@ curl -X POST http://localhost:3000/api/v1/agent/profiles \
 
 ```json
 {
-  "apiProvider": "openai",
-  "openAiApiKey": "sk-...",
-  "openAiModelId": "gpt-4-turbo"
+	"apiProvider": "openai",
+	"openAiApiKey": "sk-...",
+	"openAiModelId": "gpt-4-turbo"
 }
 ```
+
 </details>
 
 <details>
@@ -235,11 +241,12 @@ curl -X POST http://localhost:3000/api/v1/agent/profiles \
 
 ```json
 {
-  "apiProvider": "gemini",
-  "geminiApiKey": "AIza...",
-  "apiModelId": "gemini-2.0-flash-exp"
+	"apiProvider": "gemini",
+	"geminiApiKey": "AIza...",
+	"apiModelId": "gemini-2.0-flash-exp"
 }
 ```
+
 </details>
 
 <details>
@@ -247,13 +254,14 @@ curl -X POST http://localhost:3000/api/v1/agent/profiles \
 
 ```json
 {
-  "apiProvider": "bedrock",
-  "awsAccessKey": "AKIA...",
-  "awsSecretKey": "...",
-  "awsRegion": "us-east-1",
-  "apiModelId": "anthropic.claude-3-5-sonnet-20241022-v2:0"
+	"apiProvider": "bedrock",
+	"awsAccessKey": "AKIA...",
+	"awsSecretKey": "...",
+	"awsRegion": "us-east-1",
+	"apiModelId": "anthropic.claude-3-5-sonnet-20241022-v2:0"
 }
 ```
+
 </details>
 
 <details>
@@ -261,12 +269,13 @@ curl -X POST http://localhost:3000/api/v1/agent/profiles \
 
 ```json
 {
-  "apiProvider": "azure",
-  "azureApiVersion": "2024-10-21",
-  "azureApiKey": "...",
-  "azureApiInstancePath": "https://your-instance.openai.azure.com"
+	"apiProvider": "azure",
+	"azureApiVersion": "2024-10-21",
+	"azureApiKey": "...",
+	"azureApiInstancePath": "https://your-instance.openai.azure.com"
 }
 ```
+
 </details>
 
 <details>
@@ -274,11 +283,12 @@ curl -X POST http://localhost:3000/api/v1/agent/profiles \
 
 ```json
 {
-  "apiProvider": "ollama",
-  "ollamaModelId": "qwen2.5-coder:32b",
-  "ollamaBaseUrl": "http://localhost:11434"
+	"apiProvider": "ollama",
+	"ollamaModelId": "qwen2.5-coder:32b",
+	"ollamaBaseUrl": "http://localhost:11434"
 }
 ```
+
 </details>
 
 <details>
@@ -286,11 +296,12 @@ curl -X POST http://localhost:3000/api/v1/agent/profiles \
 
 ```json
 {
-  "apiProvider": "lmstudio",
-  "lmStudioModelId": "your-model-name",
-  "lmStudioBaseUrl": "http://localhost:1234"
+	"apiProvider": "lmstudio",
+	"lmStudioModelId": "your-model-name",
+	"lmStudioBaseUrl": "http://localhost:1234"
 }
 ```
+
 </details>
 
 See [docs/api-reference.html](docs/api-reference.html) for all 30+ supported providers.
@@ -325,6 +336,7 @@ curl -X POST http://localhost:3000/api/v1/agent/tasks -d '{"text": "Write tests"
 ```
 
 **Scale to hundreds of instances:**
+
 ```bash
 npm run start -- --port 3001 &  # Instance 1
 npm run start -- --port 3002 &  # Instance 2
@@ -351,15 +363,15 @@ Control autonomous AI agents by sending JSON. No SDKs, no frameworks, no lock-in
 
 ```typescript
 // Create a task
-await fetch('http://localhost:3000/api/v1/agent/tasks', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ text: 'Build a login form' })
-});
+await fetch("http://localhost:3000/api/v1/agent/tasks", {
+	method: "POST",
+	headers: { "Content-Type": "application/json" },
+	body: JSON.stringify({ text: "Build a login form" }),
+})
 
 // Real-time WebSocket updates
-const ws = new WebSocket('ws://localhost:3000/ws?token=YOUR_TOKEN');
-ws.onmessage = (e) => console.log('Agent:', JSON.parse(e.data));
+const ws = new WebSocket("ws://localhost:3000/ws?token=YOUR_TOKEN")
+ws.onmessage = (e) => console.log("Agent:", JSON.parse(e.data))
 ```
 
 Works with any platform: web, mobile, desktop, CLI, IoT, CI/CD.
@@ -373,6 +385,7 @@ Works with any platform: web, mobile, desktop, CLI, IoT, CI/CD.
 Complete API coverage for every feature with full OpenAPI specification. Sample endpoints:
 
 **Task Management:**
+
 ```bash
 POST   /api/v1/agent/tasks                   # Create new task
 GET    /api/v1/agent/tasks                   # List all tasks
@@ -383,6 +396,7 @@ POST   /api/v1/agent/tasks/{taskId}/respond  # Send user response
 ```
 
 **AI Profiles:**
+
 ```bash
 GET    /api/v1/agent/profiles                # List all AI profiles
 POST   /api/v1/agent/profiles                # Create profile
@@ -391,6 +405,7 @@ PUT    /api/v1/agent/profiles/modes/{mode}   # Assign profile to mode
 ```
 
 **Memory Bank (Persistent AI Knowledge):**
+
 ```bash
 GET    /api/v1/agent/memory-bank              # List memories
 POST   /api/v1/agent/memory-bank              # Create memory
@@ -401,6 +416,7 @@ POST   /api/v1/agent/memory-bank/suggest      # Get AI suggestions
 **Plus 50+ more endpoints** for modes, browser automation, slash commands, and more.
 
 **Full Documentation:**
+
 - **[docs/api-reference.html](docs/api-reference.html)** - Interactive API documentation (open in browser)
 - **[README_API.md](README_API.md)** - Complete REST API reference
 - **[OPENAPI.yaml](OPENAPI.yaml)** - OpenAPI 3.0 specification (machine-readable)
@@ -409,12 +425,12 @@ POST   /api/v1/agent/memory-bank/suggest      # Get AI suggestions
 
 The agent adapts to different development scenarios:
 
-| Mode | Purpose | Best For |
-|------|---------|----------|
-| 💻 **Code** | Write, modify, refactor code | Feature development, bug fixes |
-| 🏗️ **Architect** | Plan and design before coding | System design, architecture decisions |
-| ❓ **Ask** | Answer questions, explain code | Documentation, learning, research |
-| 🪲 **Debug** | Troubleshoot and fix issues | Finding bugs, analyzing errors |
+| Mode                | Purpose                             | Best For                                 |
+| ------------------- | ----------------------------------- | ---------------------------------------- |
+| 💻 **Code**         | Write, modify, refactor code        | Feature development, bug fixes           |
+| 🏗️ **Architect**    | Plan and design before coding       | System design, architecture decisions    |
+| ❓ **Ask**          | Answer questions, explain code      | Documentation, learning, research        |
+| 🪲 **Debug**        | Troubleshoot and fix issues         | Finding bugs, analyzing errors           |
 | 🪃 **Orchestrator** | Coordinate complex multi-step tasks | Large projects spanning multiple domains |
 
 ---
@@ -428,110 +444,137 @@ The agent adapts to different development scenarios:
 ```html
 <!DOCTYPE html>
 <html>
-<head>
-  <title>AI Coding Assistant</title>
-  <style>
-    body { font-family: Arial; max-width: 800px; margin: 50px auto; padding: 20px; }
-    input, select { width: 100%; padding: 8px; margin: 5px 0; }
-    button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
-    button:disabled { background: #ccc; cursor: not-allowed; }
-    #status { margin-top: 20px; padding: 10px; background: #f5f5f5; max-height: 400px; overflow-y: auto; }
-  </style>
-</head>
-<body>
-  <h1>🤖 AI Agent Control Panel</h1>
-  
-  <!-- Step 1: Configure AI Model -->
-  <h3>1. Configure AI Model</h3>
-  <input id="apiKey" type="password" placeholder="OpenRouter API Key (sk-or-v1-...)">
-  <select id="model">
-    <option value="anthropic/claude-sonnet-4">Claude Sonnet 4 (Recommended)</option>
-    <option value="openai/gpt-4-turbo">GPT-4 Turbo</option>
-    <option value="google/gemini-2.0-flash-exp">Gemini Flash</option>
-  </select>
-  <button onclick="setupProfile()">Setup Profile</button>
-  
-  <!-- Step 2: Create Task -->
-  <h3>2. Create AI Coding Task</h3>
-  <input id="task" placeholder="What should the AI build?" disabled>
-  <button id="createBtn" onclick="createTask()" disabled>Start Agent</button>
-  
-  <!-- Step 3: Live Progress -->
-  <h3>3. Live Progress</h3>
-  <div id="status">Configure AI model to begin...</div>
-  
-  <script>
-    const API = 'http://localhost:3000/api/v1/agent';
-    const TOKEN = 'your-server-token-here'; // Get from server startup logs
-    let ws = null;
-    
-    // Setup AI Profile (configures which model to use)
-    async function setupProfile() {
-      const apiKey = document.getElementById('apiKey').value;
-      const model = document.getElementById('model').value;
-      if (!apiKey) return alert('Enter your API key');
-      
-      const res = await fetch(`${API}/profiles`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${TOKEN}` },
-        body: JSON.stringify({
-          name: 'default',
-          config: {
-            apiProvider: 'openrouter',
-            openRouterApiKey: apiKey,
-            openRouterModelId: model
-          }
-        })
-      });
-      
-      if (res.ok) {
-        document.getElementById('task').disabled = false;
-        document.getElementById('createBtn').disabled = false;
-        document.getElementById('status').innerHTML = '✅ Ready! Enter a task and click Start.';
-        connectWebSocket();
-      } else {
-        alert('Error: ' + (await res.json()).message);
-      }
-    }
-    
-    // Create AI Coding Task
-    async function createTask() {
-      const task = document.getElementById('task').value;
-      if (!task) return;
-      
-      const res = await fetch(`${API}/tasks`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${TOKEN}` },
-        body: JSON.stringify({ text: task })
-      });
-      
-      const data = await res.json();
-      document.getElementById('status').innerHTML += `<p><strong>🚀 Created: ${data.taskId}</strong></p>`;
-    }
-    
-    // Real-time WebSocket Updates
-    function connectWebSocket() {
-      ws = new WebSocket(`ws://localhost:3000/ws?token=${TOKEN}`);
-      ws.onmessage = (e) => {
-        const msg = JSON.parse(e.data);
-        const text = msg.clineMessage?.text || msg.text || msg.type;
-        document.getElementById('status').innerHTML += `<p>${new Date().toLocaleTimeString()}: ${text.substring(0, 100)}</p>`;
-        document.getElementById('status').scrollTop = 999999;
-      };
-    }
-  </script>
-</body>
+	<head>
+		<title>AI Coding Assistant</title>
+		<style>
+			body {
+				font-family: Arial;
+				max-width: 800px;
+				margin: 50px auto;
+				padding: 20px;
+			}
+			input,
+			select {
+				width: 100%;
+				padding: 8px;
+				margin: 5px 0;
+			}
+			button {
+				padding: 10px 20px;
+				background: #007bff;
+				color: white;
+				border: none;
+				cursor: pointer;
+			}
+			button:disabled {
+				background: #ccc;
+				cursor: not-allowed;
+			}
+			#status {
+				margin-top: 20px;
+				padding: 10px;
+				background: #f5f5f5;
+				max-height: 400px;
+				overflow-y: auto;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>🤖 AI Agent Control Panel</h1>
+
+		<!-- Step 1: Configure AI Model -->
+		<h3>1. Configure AI Model</h3>
+		<input id="apiKey" type="password" placeholder="OpenRouter API Key (sk-or-v1-...)" />
+		<select id="model">
+			<option value="anthropic/claude-sonnet-4">Claude Sonnet 4 (Recommended)</option>
+			<option value="openai/gpt-4-turbo">GPT-4 Turbo</option>
+			<option value="google/gemini-2.0-flash-exp">Gemini Flash</option>
+		</select>
+		<button onclick="setupProfile()">Setup Profile</button>
+
+		<!-- Step 2: Create Task -->
+		<h3>2. Create AI Coding Task</h3>
+		<input id="task" placeholder="What should the AI build?" disabled />
+		<button id="createBtn" onclick="createTask()" disabled>Start Agent</button>
+
+		<!-- Step 3: Live Progress -->
+		<h3>3. Live Progress</h3>
+		<div id="status">Configure AI model to begin...</div>
+
+		<script>
+			const API = "http://localhost:3000/api/v1/agent"
+			const TOKEN = "your-server-token-here" // Get from server startup logs
+			let ws = null
+
+			// Setup AI Profile (configures which model to use)
+			async function setupProfile() {
+				const apiKey = document.getElementById("apiKey").value
+				const model = document.getElementById("model").value
+				if (!apiKey) return alert("Enter your API key")
+
+				const res = await fetch(`${API}/profiles`, {
+					method: "POST",
+					headers: { "Content-Type": "application/json", Authorization: `Bearer ${TOKEN}` },
+					body: JSON.stringify({
+						name: "default",
+						config: {
+							apiProvider: "openrouter",
+							openRouterApiKey: apiKey,
+							openRouterModelId: model,
+						},
+					}),
+				})
+
+				if (res.ok) {
+					document.getElementById("task").disabled = false
+					document.getElementById("createBtn").disabled = false
+					document.getElementById("status").innerHTML = "✅ Ready! Enter a task and click Start."
+					connectWebSocket()
+				} else {
+					alert("Error: " + (await res.json()).message)
+				}
+			}
+
+			// Create AI Coding Task
+			async function createTask() {
+				const task = document.getElementById("task").value
+				if (!task) return
+
+				const res = await fetch(`${API}/tasks`, {
+					method: "POST",
+					headers: { "Content-Type": "application/json", Authorization: `Bearer ${TOKEN}` },
+					body: JSON.stringify({ text: task }),
+				})
+
+				const data = await res.json()
+				document.getElementById("status").innerHTML += `<p><strong>🚀 Created: ${data.taskId}</strong></p>`
+			}
+
+			// Real-time WebSocket Updates
+			function connectWebSocket() {
+				ws = new WebSocket(`ws://localhost:3000/ws?token=${TOKEN}`)
+				ws.onmessage = (e) => {
+					const msg = JSON.parse(e.data)
+					const text = msg.clineMessage?.text || msg.text || msg.type
+					document.getElementById("status").innerHTML +=
+						`<p>${new Date().toLocaleTimeString()}: ${text.substring(0, 100)}</p>`
+					document.getElementById("status").scrollTop = 999999
+				}
+			}
+		</script>
+	</body>
 </html>
 ```
 
 **This complete, working example includes:**
+
 - ✅ AI model configuration (OpenRouter with multiple models)
 - ✅ Profile creation and activation
 - ✅ Task creation and management
 - ✅ Real-time WebSocket progress updates
 - ✅ No build tools, no dependencies - just open in browser
 
-*CORS enabled - simple .html files work securely with token auth.*
+_CORS enabled - simple .html files work securely with token auth._
 
 > **📘 Learn More:** For complete WebSocket message types and integration patterns, see [docs/WEBSOCKET_MESSAGES.md](docs/WEBSOCKET_MESSAGES.md)
 
@@ -556,6 +599,7 @@ The agent adapts to different development scenarios:
 </p>
 
 **Why Build Your Own?**
+
 - 🎨 **Complete Design Freedom** - Build the UI you've always wanted
 - 🚀 **Fast Iteration** - Hot reload, modern frameworks, no VS Code extension limitations
 - 📱 **Cross-Platform** - Web, mobile, desktop - anything that speaks HTTP
@@ -564,39 +608,41 @@ The agent adapts to different development scenarios:
 **Getting Started:**
 
 1. **Review the API Documentation:**
-   - [docs/api-reference.html](docs/api-reference.html) - Interactive API documentation (open in browser)
-   - [OPENAPI.yaml](OPENAPI.yaml) - Complete OpenAPI 3.0 specification
-   - [README_API.md](README_API.md) - REST API reference with examples
+
+    - [docs/api-reference.html](docs/api-reference.html) - Interactive API documentation (open in browser)
+    - [OPENAPI.yaml](OPENAPI.yaml) - Complete OpenAPI 3.0 specification
+    - [README_API.md](README_API.md) - REST API reference with examples
 
 2. **🤖 Use AI to Accelerate Development:**
-   
-   Want to build a UI fast? Use AI coding assistants (Claude, ChatGPT, etc.) with our API specs as context:
-   
-   ```
-   "Build me a web UI for Hoody Agent Server. Here's the API specification:
-   
-   [Paste OPENAPI_COMPRESSED.yaml content]
-   [Paste README_API.md content]
-   
-   Create a React/Vue/Svelte app that can:
-   - Configure AI providers
-   - Create and manage tasks
-   - Display real-time WebSocket updates
-   - Show task history
-   "
-   ```
-   
-   **Pro Tips:**
-   - Use [OPENAPI_COMPRESSED.yaml](OPENAPI_COMPRESSED.yaml) for AI context (smaller, optimized for LLMs)
-   - Reference [README_API.md](README_API.md) for implementation examples
-   - Check the [single-file HTML example above](#build-complete-ai-agents-in-a-single-html-file) for a working baseline
-   - Start simple, iterate fast - the API handles all complexity
+
+    Want to build a UI fast? Use AI coding assistants (Claude, ChatGPT, etc.) with our API specs as context:
+
+    ```
+    "Build me a web UI for Hoody Agent Server. Here's the API specification:
+
+    [Paste OPENAPI_COMPRESSED.yaml content]
+    [Paste README_API.md content]
+
+    Create a React/Vue/Svelte app that can:
+    - Configure AI providers
+    - Create and manage tasks
+    - Display real-time WebSocket updates
+    - Show task history
+    "
+    ```
+
+    **Pro Tips:**
+
+    - Use [OPENAPI_COMPRESSED.yaml](OPENAPI_COMPRESSED.yaml) for AI context (smaller, optimized for LLMs)
+    - Reference [README_API.md](README_API.md) for implementation examples
+    - Check the [single-file HTML example above](#build-complete-ai-agents-in-a-single-html-file) for a working baseline
+    - Start simple, iterate fast - the API handles all complexity
 
 3. **Choose Your Stack:**
-   - **Web:** React, Vue, Svelte, Angular, vanilla JS - anything that speaks HTTP
-   - **Mobile:** React Native, Flutter, Swift, Kotlin - native or cross-platform
-   - **Desktop:** Electron, Tauri, Qt - build once, deploy everywhere
-   - **CLI:** Node.js, Python, Go - scriptable automation interfaces
+    - **Web:** React, Vue, Svelte, Angular, vanilla JS - anything that speaks HTTP
+    - **Mobile:** React Native, Flutter, Swift, Kotlin - native or cross-platform
+    - **Desktop:** Electron, Tauri, Qt - build once, deploy everywhere
+    - **CLI:** Node.js, Python, Go - scriptable automation interfaces
 
 ### 🌟 Community Showcase
 
@@ -607,6 +653,7 @@ The agent adapts to different development scenarios:
 3. 🚀 **Gain visibility** - Reach thousands of developers looking for AI coding solutions
 
 **What we're looking for:**
+
 - Custom web UIs (React, Vue, Svelte, vanilla JS)
 - Mobile apps (iOS, Android, React Native, Flutter)
 - Desktop applications (Electron, Tauri)
@@ -626,6 +673,7 @@ Hoody Agent Server is a standalone component of the larger [Hoody platform](http
 - **Hoody Exec** - Code execution engine for automation
 
 **Use Standalone or Integrated:**
+
 - ✅ Run this server independently for AI coding assistance
 - ✅ Deploy on any infrastructure (VPS, Docker, Kubernetes, Hoody...)
 - ✅ Integrate with the full Hoody platform for advanced features
@@ -659,12 +707,6 @@ npm run start -- \
 
 ## 📚 Complete Documentation
 
-### 🌟 Start Here: [docs/](docs/) - Documentation Hub
-
-**New to Hoody Agent Server?** Visit **[docs/README.md](docs/)** for organized documentation with clear learning paths.
-
-### Core Documentation
-
 - **[docs/api-reference.html](docs/api-reference.html)** 📘 - **Interactive API Documentation** (open in browser)
 - **[README_API.md](README_API.md)** - Complete REST API reference (70+ endpoints)
 - **[OPENAPI.yaml](OPENAPI.yaml)** - OpenAPI 3.0 specification (machine-readable)
@@ -672,8 +714,6 @@ npm run start -- \
 - **[docs/MEMORY_BANK_API.md](docs/MEMORY_BANK_API.md)** - Persistent knowledge storage
 - **[cli/README.md](cli/README.md)** - CLI server deployment, SSL, Docker
 - **[DEVELOPMENT.md](DEVELOPMENT.md)** - Contributing & development setup
-
-**See [docs/README.md](docs/) for the complete documentation index.**
 
 ---
 
@@ -705,6 +745,7 @@ We believe AI coding assistance should be accessible to **everyone who can make 
 ## 🔐 Privacy & Data Handling
 
 **Privacy First Approach:**
+
 - ✅ **Telemetry disabled by default** - No analytics, no tracking, no data collection unless you opt-in
 - ✅ **Your code stays private** - Only sent to your chosen AI provider (Anthropic, OpenAI, etc.)
 - ✅ **API keys stored locally** - Never transmitted to us or third parties (except your chosen provider)
@@ -712,6 +753,7 @@ We believe AI coding assistance should be accessible to **everyone who can make 
 - ✅ **Full transparency** - See exactly what's sent to AI providers in debug logs (`--debug` flag)
 
 **What Gets Sent Where:**
+
 - **To AI Providers** (Anthropic/OpenAI/etc.): Your prompts, code context, and file contents when using AI features
 - **To Hoody** (if you opt-in to telemetry): Anonymous usage statistics only (no code, no prompts, no files)
 - **Nowhere else**: Your credentials, API keys, and workspace files stay on your machine
@@ -727,6 +769,7 @@ This is an open-source project by **Hoody Ltd** ([hoody.com](https://hoody.com))
 Hoody is building computing infrastructure where **everything is a URL** - containers, displays, terminals, files, and AI agents all accessible through HTTP endpoints. This agent server is a component of that vision.
 
 **Built on the shoulders of giants:**
+
 - **Cline** - Original autonomous coding agent
 - **Roo Code** - Enhanced fork of Cline
 - **Kilo Code** - Additional features and improvements

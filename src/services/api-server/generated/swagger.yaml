@@ -7357,7 +7357,7 @@ components:
       type: object
       additionalProperties: false
     LogEntry:
-      description: Represents a single log entry with a timestamp and message.
+      description: A single log entry with timestamp
       properties:
         timestamp:
           type: string
@@ -7368,9 +7368,6 @@ components:
         - message
       type: object
       additionalProperties: false
-      example:
-        timestamp: 2023-10-27T10:00:00.000Z
-        message: User logged in
     LogsResponse:
       description: Response containing log entries and buffer metadata.
       properties:
