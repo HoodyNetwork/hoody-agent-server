@@ -221,6 +221,22 @@ export interface ProcessMetrics {
 
 /**
  * Health check response
+ * @example {
+ *   "status": "ok",
+ *   "version": "1.0.0",
+ *   "uptime": 3600,
+ *   "activeConnections": 5,
+ *   "port": 3000,
+ *   "process": {
+ *     "memoryUsageMB": 245.3,
+ *     "memoryPercent": 1.5,
+ *     "cpuPercent": 12.4,
+ *     "pid": 12345,
+ *     "heapUsedMB": 180.2,
+ *     "heapTotalMB": 220.5,
+ *     "externalMB": 15.8
+ *   }
+ * }
  */
 export interface HealthCheckResponse {
 	/** Server health status */
@@ -273,6 +289,14 @@ export type ProfileDetails = ProviderSettingsDiscriminated & {
 /**
  * Profile creation request
  * Uses discriminated union to ensure only valid fields per provider
+ * @example {
+ *   "name": "my-anthropic-profile",
+ *   "config": {
+ *     "apiProvider": "anthropic",
+ *     "apiKey": "sk-ant-xxxxxxxxxxxxx",
+ *     "apiModelId": "claude-sonnet-4-20250514"
+ *   }
+ * }
  */
 export interface CreateProfileRequest {
 	/** Unique profile name */
@@ -283,6 +307,12 @@ export interface CreateProfileRequest {
 
 /**
  * Profile creation response
+ * @example {
+ *   "success": true,
+ *   "message": "Profile 'my-anthropic-profile' created",
+ *   "id": "550e8400-e29b-41d4-a716-446655440000",
+ *   "name": "my-anthropic-profile"
+ * }
  */
 export interface CreateProfileResponse {
 	success: true
@@ -296,6 +326,13 @@ export interface CreateProfileResponse {
 /**
  * Profile update request
  * Uses discriminated union to ensure only valid fields per provider
+ * @example {
+ *   "config": {
+ *     "apiProvider": "openrouter",
+ *     "openRouterModelId": "anthropic/claude-sonnet-4",
+ *     "openRouterApiKey": "sk-or-v1-xxxxxxxxxxxxx"
+ *   }
+ * }
  */
 export interface UpdateProfileRequest {
 	/** Updated profile configuration with discriminator on apiProvider */
@@ -349,6 +386,9 @@ export interface ActivateProfileResponse {
 
 /**
  * Mode profile assignment request
+ * @example {
+ *   "profileId": "550e8400-e29b-41d4-a716-446655440000"
+ * }
  */
 export interface SetModeProfileRequest {
 	/** Profile ID to assign */
@@ -435,6 +475,10 @@ export interface ModeInfo {
 
 /**
  * Task creation request
+ * @example {
+ *   "text": "Create a React component for a todo list with TypeScript",
+ *   "mode": "code"
+ * }
  */
 export interface CreateTaskRequest {
 	/** Task text/prompt */
@@ -447,6 +491,10 @@ export interface CreateTaskRequest {
 
 /**
  * Task creation response
+ * @example {
+ *   "taskId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+ *   "status": "active"
+ * }
  */
 export interface CreateTaskResponse {
 	/** Created task ID */

@@ -43,6 +43,11 @@ export type TodoStatus = "pending" | "in_progress" | "completed"
 
 /**
  * TODO item
+ * @example {
+ *   "id": "todo_abc123",
+ *   "content": "Implement user authentication",
+ *   "status": "in_progress"
+ * }
  */
 export interface TodoItem {
 	/** Unique TODO ID */
@@ -114,6 +119,10 @@ export interface TodoListResponse {
 
 /**
  * Create TODO request
+ * @example {
+ *   "content": "Write unit tests for user service",
+ *   "status": "pending"
+ * }
  */
 export interface CreateTodoRequest {
 	/** TODO content/description */
@@ -164,6 +173,13 @@ export interface DeleteTodoResponse {
 
 /**
  * Bulk update TODOs request
+ * @example {
+ *   "todos": [
+ *     {"id": "todo_1", "content": "Setup project structure", "status": "completed"},
+ *     {"id": "todo_2", "content": "Implement API endpoints", "status": "in_progress"},
+ *     {"id": "todo_3", "content": "Write documentation", "status": "pending"}
+ *   ]
+ * }
  */
 export interface BulkUpdateTodosRequest {
 	/** Array of TODO items */

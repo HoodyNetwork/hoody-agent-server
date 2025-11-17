@@ -31,6 +31,10 @@ components:
         - status
       type: object
       additionalProperties: false
+      example:
+        id: todo_abc123
+        content: Implement user authentication
+        status: in_progress
     TodoListResponse:
       description: TODO list response
       properties:
@@ -134,6 +138,9 @@ components:
         - content
       type: object
       additionalProperties: false
+      example:
+        content: Write unit tests for user service
+        status: pending
     UpdateTodoResponse:
       description: Update TODO response
       properties:
@@ -197,6 +204,17 @@ components:
         - todos
       type: object
       additionalProperties: false
+      example:
+        todos:
+          - id: todo_1
+            content: Setup project structure
+            status: completed
+          - id: todo_2
+            content: Implement API endpoints
+            status: in_progress
+          - id: todo_3
+            content: Write documentation
+            status: pending
     ImportTodosResponse:
       description: Import TODOs response (deprecated - use bulk update instead)
       properties:
@@ -840,6 +858,7 @@ components:
       type: object
       additionalProperties: false
     RespondToTaskRequest:
+      description: Request to respond to a task
       properties:
         response:
           type: string
@@ -868,6 +887,8 @@ components:
         - response
       type: object
       additionalProperties: false
+      example:
+        response: approve
     CancelTaskResponse:
       properties:
         success:
@@ -1047,6 +1068,7 @@ components:
       type: object
       additionalProperties: false
     AddToQueueRequest:
+      description: Request to add message to task queue
       properties:
         text:
           type: string
@@ -1058,6 +1080,8 @@ components:
         - text
       type: object
       additionalProperties: false
+      example:
+        text: Also refactor the authentication module
     UpdateQueueMessageResponse:
       properties:
         success:
@@ -1120,6 +1144,7 @@ components:
       type: object
       additionalProperties: false
     BatchDeleteRequest:
+      description: Batch delete request
       properties:
         taskIds:
           items:
@@ -1129,6 +1154,10 @@ components:
         - taskIds
       type: object
       additionalProperties: false
+      example:
+        taskIds:
+          - a1b2c3d4-e5f6-7890-abcd-ef1234567890
+          - b2c3d4e5-f6a7-8901-bcde-f12345678901
     Checkpoint:
       properties:
         hash:
@@ -1184,6 +1213,7 @@ components:
       type: object
       additionalProperties: false
     RestoreCheckpointRequest:
+      description: Request to restore a checkpoint
       properties:
         hash:
           type: string
@@ -1191,6 +1221,8 @@ components:
         - hash
       type: object
       additionalProperties: false
+      example:
+        hash: a1b2c3d4e5f67890
     CheckpointDiffResponse:
       properties:
         taskId:
@@ -1248,6 +1280,7 @@ components:
       type: object
       additionalProperties: false
     ForkTaskRequest:
+      description: Request to fork a task from a message
       properties:
         messageTimestamp:
           type: number
@@ -1262,6 +1295,10 @@ components:
         - messageTimestamp
       type: object
       additionalProperties: false
+      example:
+        messageTimestamp: 1698432000000
+        makeActive: true
+        mode: code
     EditMessageResponse:
       properties:
         success:
@@ -1281,6 +1318,7 @@ components:
       type: object
       additionalProperties: false
     EditMessageRequest:
+      description: Request to edit a message
       properties:
         text:
           type: string
@@ -1294,6 +1332,8 @@ components:
         - text
       type: object
       additionalProperties: false
+      example:
+        text: Create a React component for a todo list with dark mode support
     DigestMessageResponse:
       properties:
         success:
@@ -1409,7 +1449,7 @@ components:
       type: object
       additionalProperties: false
     UpdateTaskModeRequest:
-      description: Task mode update request
+      description: Request to update task mode
       properties:
         mode:
           type: string
@@ -6809,6 +6849,11 @@ components:
         - name
       type: object
       additionalProperties: false
+      example:
+        success: true
+        message: Profile 'my-anthropic-profile' created
+        id: 550e8400-e29b-41d4-a716-446655440000
+        name: my-anthropic-profile
     CreateProfileRequest:
       description: |-
         Profile creation request
@@ -6825,6 +6870,12 @@ components:
         - config
       type: object
       additionalProperties: false
+      example:
+        name: my-anthropic-profile
+        config:
+          apiProvider: anthropic
+          apiKey: sk-ant-xxxxxxxxxxxxx
+          apiModelId: claude-sonnet-4-20250514
     UpdateProfileResponse:
       description: Profile update response
       properties:
@@ -6863,6 +6914,11 @@ components:
         - config
       type: object
       additionalProperties: false
+      example:
+        config:
+          apiProvider: openrouter
+          openRouterModelId: anthropic/claude-sonnet-4
+          openRouterApiKey: sk-or-v1-xxxxxxxxxxxxx
     DeleteProfileResponse:
       description: Profile deletion response
       properties:
@@ -6974,6 +7030,8 @@ components:
           description: Profile name to assign (alternative to profileId)
       type: object
       additionalProperties: false
+      example:
+        profileId: 550e8400-e29b-41d4-a716-446655440000
     MemoryEntry:
       description: Memory entry metadata
       properties:
@@ -7037,6 +7095,24 @@ components:
         - updatedAt
       type: object
       additionalProperties: false
+      example:
+        id: mem_a1b2c3
+        path: api-patterns.md
+        title: REST API Design Patterns
+        content: |-
+          # REST API Design Patterns
+
+          Always use plural nouns for resource endpoints...
+        scope: global
+        category: best-practices
+        tags:
+          - api
+          - rest
+          - design
+        enabled: true
+        createdAt: 2024-01-15T10:30:00.000Z
+        updatedAt: 2024-01-20T14:45:00.000Z
+        size: 2048
     MemoryListResponse:
       description: Memory list response
       properties:
@@ -7159,6 +7235,17 @@ components:
         - scope
       type: object
       additionalProperties: false
+      example:
+        filename: error-handling-pattern.md
+        content: |-
+          # Error Handling Pattern
+
+          Always wrap async operations in try-catch blocks...
+        scope: local
+        category: patterns
+        tags:
+          - error-handling
+          - async
     UpdateMemoryResponse:
       description: Update memory response
       properties:
@@ -7197,6 +7284,15 @@ components:
           description: Updated category
       type: object
       additionalProperties: false
+      example:
+        content: |-
+          # Updated Error Handling Pattern
+
+          Always use specific error types...
+        tags:
+          - error-handling
+          - async
+          - typescript
     ToggleMemoryResponse:
       description: Toggle memory response
       properties:
@@ -7470,6 +7566,20 @@ components:
         - process
       type: object
       additionalProperties: false
+      example:
+        status: ok
+        version: 1.0.0
+        uptime: 3600
+        activeConnections: 5
+        port: 3000
+        process:
+          memoryUsageMB: 245.3
+          memoryPercent: 1.5
+          cpuPercent: 12.4
+          pid: 12345
+          heapUsedMB: 180.2
+          heapTotalMB: 220.5
+          externalMB: 15.8
     FileEntry:
       properties:
         path:

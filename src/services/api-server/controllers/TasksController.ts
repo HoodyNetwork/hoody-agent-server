@@ -385,6 +385,12 @@ interface ResumeTaskResponse {
 	context?: TaskContext
 }
 
+/**
+ * Request to respond to a task
+ * @example {
+ *   "response": "approve"
+ * }
+ */
 interface RespondToTaskRequest {
 	/**
 	 * Response type:
@@ -442,6 +448,12 @@ interface MessageQueueResponse {
 	count: number
 }
 
+/**
+ * Request to add message to task queue
+ * @example {
+ *   "text": "Also refactor the authentication module"
+ * }
+ */
 interface AddToQueueRequest {
 	text: string
 	images?: string[]
@@ -470,6 +482,12 @@ interface ClearQueueResponse {
 	cleared: number
 }
 
+/**
+ * Batch delete request
+ * @example {
+ *   "taskIds": ["a1b2c3d4-e5f6-7890-abcd-ef1234567890", "b2c3d4e5-f6a7-8901-bcde-f12345678901"]
+ * }
+ */
 interface BatchDeleteRequest {
 	taskIds: string[]
 }
@@ -481,6 +499,14 @@ interface BatchDeleteResponse {
 	total: number
 }
 
+/**
+ * Request to fork a task from a message
+ * @example {
+ *   "messageTimestamp": 1698432000000,
+ *   "makeActive": true,
+ *   "mode": "code"
+ * }
+ */
 interface ForkTaskRequest {
 	messageTimestamp: number
 	makeActive?: boolean
@@ -498,6 +524,12 @@ interface ForkTaskResponse {
 	context?: TaskContext
 }
 
+/**
+ * Request to edit a message
+ * @example {
+ *   "text": "Create a React component for a todo list with dark mode support"
+ * }
+ */
 interface EditMessageRequest {
 	/** Updated message text */
 	text: string
@@ -568,6 +600,12 @@ interface CheckpointListResponse {
 	currentCheckpoint?: string
 }
 
+/**
+ * Request to restore a checkpoint
+ * @example {
+ *   "hash": "a1b2c3d4e5f67890"
+ * }
+ */
 interface RestoreCheckpointRequest {
 	hash: string
 }
@@ -642,6 +680,13 @@ interface ImportTaskResponse {
 
 /**
  * Task mode update request
+ */
+/**
+ * Request to update task mode
+ * @example {
+ *   "mode": "debug",
+ *   "profileId": "550e8400-e29b-41d4-a716-446655440000"
+ * }
  */
 interface UpdateTaskModeRequest {
 	/** New mode for this task (persists to history) */

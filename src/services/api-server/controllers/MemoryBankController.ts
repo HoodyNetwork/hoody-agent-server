@@ -52,6 +52,19 @@ function getProvider(): ClineProvider {
 
 /**
  * Memory entry metadata
+ * @example {
+ *   "id": "mem_a1b2c3",
+ *   "path": "api-patterns.md",
+ *   "title": "REST API Design Patterns",
+ *   "content": "# REST API Design Patterns\n\nAlways use plural nouns for resource endpoints...",
+ *   "scope": "global",
+ *   "category": "best-practices",
+ *   "tags": ["api", "rest", "design"],
+ *   "enabled": true,
+ *   "createdAt": "2024-01-15T10:30:00.000Z",
+ *   "updatedAt": "2024-01-20T14:45:00.000Z",
+ *   "size": 2048
+ * }
  */
 export interface MemoryEntry {
 	/** Unique memory ID (e.g., mem_abc123) */
@@ -98,6 +111,13 @@ export interface MemoryListResponse {
 
 /**
  * Create memory request
+ * @example {
+ *   "filename": "error-handling-pattern.md",
+ *   "content": "# Error Handling Pattern\n\nAlways wrap async operations in try-catch blocks...",
+ *   "scope": "local",
+ *   "category": "patterns",
+ *   "tags": ["error-handling", "async"]
+ * }
  */
 export interface CreateMemoryRequest {
 	/** File name (e.g., "api-patterns.md") */
@@ -130,6 +150,10 @@ export interface CreateMemoryResponse {
 
 /**
  * Update memory request
+ * @example {
+ *   "content": "# Updated Error Handling Pattern\n\nAlways use specific error types...",
+ *   "tags": ["error-handling", "async", "typescript"]
+ * }
  */
 export interface UpdateMemoryRequest {
 	/** Updated content */

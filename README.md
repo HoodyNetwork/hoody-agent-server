@@ -384,6 +384,8 @@ Works with any platform: web, mobile, desktop, CLI, IoT, CI/CD.
 
 ### 📦 **OpenAPI 3.0 Compliant - 69 Endpoints**
 
+**The OpenAPI specification ([`OPENAPI.yaml`](OPENAPI.yaml)) is automatically generated from TypeScript source code using [tsoa](https://tsoa-community.github.io/docs/)**. This ensures the API documentation is always in sync with the actual implementation.
+
 Complete API coverage for every feature with full OpenAPI specification. Sample endpoints:
 
 **Task Management:**
@@ -421,7 +423,48 @@ POST   /api/v1/agent/memory-bank/suggest      # Get AI suggestions
 
 - **[docs/api-reference.html](docs/api-reference.html)** - Interactive API documentation (open in browser)
 - **[README_API.md](README_API.md)** - Complete REST API reference
-- **[OPENAPI.yaml](OPENAPI.yaml)** - OpenAPI 3.0 specification (machine-readable)
+- **[OPENAPI.yaml](OPENAPI.yaml)** - OpenAPI 3.0 specification (auto-generated, machine-readable)
+
+**For Contributors & AI Agents - Maintaining the OpenAPI Spec:**
+
+The OpenAPI specification is **automatically generated** from TypeScript source code via [tsoa](https://tsoa-community.github.io/docs/). **Never edit [`OPENAPI.yaml`](OPENAPI.yaml) directly!**
+
+**To add or update API examples:**
+
+1. Add `@example` JSDoc decorators to TypeScript interfaces in controller files:
+   - [`src/services/api-server/api-types.ts`](src/services/api-server/api-types.ts) - Shared request/response types
+   - [`src/services/api-server/controllers/*Controller.ts`](src/services/api-server/controllers/) - Controller-specific types
+
+2. Regenerate the spec:
+   ```bash
+   pnpm generate:api-types  # Regenerate from Zod schemas
+   cd src && pnpm bundle    # Rebuild and copy to root
+   ```
+
+3. The updated [`OPENAPI.yaml`](OPENAPI.yaml) will be copied to the project root automatically
+
+**Example - Adding an Example to a Type:**
+```typescript
+/**
+ * Task creation request
+ * @example {
+ *   "text": "Create a React component for a todo list",
+ *   "mode": "code"
+ * }
+ */
+export interface CreateTaskRequest {
+  text: string
+  mode?: string
+}
+```
+
+**Important Notes:**
+- Examples help SDK generators produce better client libraries with realistic code samples
+- Always use realistic values (proper UUIDs, timestamps, API key formats)
+- For discriminated unions (like `ProviderSettingsDiscriminated`), provide examples for each variant
+- The build process: `generate-api-types.ts` → `tsoa` → `esbuild.mjs` (copies to root)
+
+See [tsoa documentation](https://tsoa-community.github.io/docs/examples.html) for complete `@example` syntax.
 
 ### 🎨 **Multiple Operating Modes**
 

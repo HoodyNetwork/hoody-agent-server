@@ -3,7 +3,7 @@ import { Package } from "../../shared/package"
 
 export const DEFAULT_HEADERS = {
 	"HTTP-Referer": "https://hoody.com",
-	"X-Title": "Hoody Code",
+	"X-Title": "Hoody",
 	[X_HOODYCODE_VERSION]: Package.version,
 	"User-Agent": `Hoody-Code/${Package.version}`,
 }
